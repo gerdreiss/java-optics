@@ -1,5 +1,7 @@
 package com.github.gerdreiss.optics;
 
+import java.util.Optional;
+
 public abstract class TestModel {
 
     static class RootObj {
@@ -29,13 +31,23 @@ public abstract class TestModel {
 
     static class InnerObj {
         private final String property;
+        private final Optional<String> maybeProperty;
 
         public InnerObj(String property) {
+            this(property, Optional.empty());
+        }
+
+        public InnerObj(String property, Optional<String> maybeProperty) {
             this.property = property;
+            this.maybeProperty = maybeProperty;
         }
 
         public String getProperty() {
             return property;
+        }
+
+        public Optional<String> getMaybeProperty() {
+            return maybeProperty;
         }
     }
 
