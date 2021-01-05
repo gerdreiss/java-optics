@@ -19,19 +19,29 @@ public abstract class TestModel {
     static class NestedObj {
 
         private final InnerObj innerObj;
+        private final Optional<InnerObj> maybeInnerObj; // TODO create views & lenses for this property
 
         public NestedObj(InnerObj innerObj) {
+            this(innerObj, Optional.empty());
+        }
+
+        public NestedObj(InnerObj innerObj, Optional<InnerObj> maybeInnerObj) {
             this.innerObj = innerObj;
+            this.maybeInnerObj = maybeInnerObj;
         }
 
         public InnerObj getInnerObj() {
             return innerObj;
         }
+
+        public Optional<InnerObj> getMaybeInnerObj() {
+            return maybeInnerObj;
+        }
     }
 
     static class InnerObj {
         private final String property;
-        private final Optional<String> maybeProperty;
+        private final Optional<String> maybeProperty; // TODO create views & lenses for this property
 
         public InnerObj(String property) {
             this(property, Optional.empty());
