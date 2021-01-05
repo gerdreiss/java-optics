@@ -7,8 +7,8 @@ import java.util.function.Function;
  * "A lens is basically a getter/setter that can be used for deep updates of immutable data."
  * http://davids-code.blogspot.de/2014/02/immutable-domain-and-lenses-in-java-8.html
  *
- * @param <A> The object into whose property we want to view
- * @param <B> The object property which we want to view
+ * @param <A> The object into whose property we want to view or update
+ * @param <B> The object property which we want to view or update
  */
 public class Lens<A, B> extends View<A, B> {
 
