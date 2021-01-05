@@ -21,7 +21,7 @@ public class OptionalLens<A, B> extends OptionalView<A, B> {
     }
 
     public static <A, B> OptionalLens<A, B> of(Function<A, Optional<B>> fget, BiFunction<A, B, A> fset) {
-        return new OptionalLens<A, B>(fget, fset);
+        return new OptionalLens<>(fget, fset);
     }
 
     public A set(A target, B value) {

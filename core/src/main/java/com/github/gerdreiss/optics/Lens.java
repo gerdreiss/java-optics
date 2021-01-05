@@ -20,7 +20,7 @@ public class Lens<A, B> extends View<A, B> {
     }
 
     public static <A, B> Lens<A, B> of(Function<A, B> fget, BiFunction<A, B, A> fset) {
-        return new Lens<A, B>(fget, fset);
+        return new Lens<>(fget, fset);
     }
 
     public A set(A target, B value) {

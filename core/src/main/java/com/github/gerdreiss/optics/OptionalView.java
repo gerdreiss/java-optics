@@ -19,7 +19,7 @@ public class OptionalView<A, B> implements Function<A, Optional<B>> {
     }
 
     public static <A, B> OptionalView<A, B> of(Function<A, Optional<B>> fget) {
-        return new OptionalView<A, B>(fget);
+        return new OptionalView<>(fget);
     }
 
     @Override
