@@ -34,7 +34,15 @@ public class View<A, B> implements Function<A, B> {
         return new View<>((A a) -> that.get(get(a)));
     }
 
+    public <C> OptionalView<A, C> andThen(OptionalView<B, C> that) {
+        return new OptionalView<>((A a) -> that.getOptional(get(a)));
+    }
+
     public <C> View<C, B> compose(final View<C, A> that) {
+        return that.andThen(this);
+    }
+
+    public <C> OptionalView<C, B> compose(final OptionalView<C, A> that) {
         return that.andThen(this);
     }
 }

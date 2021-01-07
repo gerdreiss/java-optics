@@ -18,24 +18,32 @@ public class OptionalView<A, B> implements Function<A, Optional<B>> {
         this.fget = fget;
     }
 
-    public static <A, B> OptionalView<A, B> of(Function<A, Optional<B>> fget) {
+    public static <A, B> OptionalView<A, B> of(final Function<A, Optional<B>> fget) {
         return new OptionalView<>(fget);
     }
 
     @Override
     public Optional<B> apply(A a) {
-        return getOptional(a);
+        return a == null ? Optional.empty() : getOptional(a);
     }
 
     public Optional<B> getOptional(A a) {
-        return fget.apply(a);
+        return a == null ? Optional.empty() : fget.apply(a);
     }
 
-    public <C> OptionalView<A, C> andThen(OptionalView<B, C> that) {
+    public <C> OptionalView<A, C> andThen(final OptionalView<B, C> that) {
         return new OptionalView<>((A a) -> getOptional(a).flatMap(that::getOptional));
     }
 
+    public <C> OptionalView<A, C> andThen(final View<B, C> that) {
+        return new OptionalView<>((A a) -> getOptional(a).map(that::get));
+    }
+
     public <C> OptionalView<C, B> compose(final OptionalView<C, A> that) {
+        return that.andThen(this);
+    }
+
+    public <C> OptionalView<C, B> compose(final View<C, A> that) {
         return that.andThen(this);
     }
 }
