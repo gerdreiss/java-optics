@@ -31,6 +31,10 @@ public class Lens<A, B> extends View<A, B> {
         return (B value) -> set(target, value);
     }
 
+    public A modify(A target, Function<B, B> modifier) {
+        return set(target, modifier.apply(get(target)));
+    }
+
     public <C> Lens<A, C> andThen(Lens<B, C> that) {
         return new Lens<>(
                 (A a) -> that.get(get(a)),

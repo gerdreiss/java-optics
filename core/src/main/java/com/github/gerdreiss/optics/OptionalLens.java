@@ -32,6 +32,10 @@ public class OptionalLens<A, B> extends OptionalView<A, B> {
         return (B value) -> set(target, value);
     }
 
+    public A modify(A target, Function<B,B> modifier) {
+        return set(target, getOptional(target).map(modifier).orElse(null));
+    }
+
     public <C> OptionalLens<A, C> andThen(OptionalLens<B, C> that) {
         return new OptionalLens<>(
                 (A a) -> getOptional(a).flatMap(that::getOptional),

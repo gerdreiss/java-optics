@@ -37,6 +37,13 @@ public class OptionalLensTest extends TestModel {
     }
 
     @Test
+    public void modify() {
+        InnerObj created = new InnerObj("property");
+        InnerObj updated = propertyLens.modify(created, String::toUpperCase);
+        assertEquals("PROPERTY", updated.getProperty());
+    }
+
+    @Test
     public void andThen() {
         OptionalLens<RootObj, String> composed = nestedObjLens.andThen(innerObjLens).andThen(propertyLens);
 

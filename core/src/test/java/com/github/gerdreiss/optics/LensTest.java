@@ -2,6 +2,9 @@ package com.github.gerdreiss.optics;
 
 import org.junit.Test;
 
+import java.util.Optional;
+import java.util.function.Function;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
@@ -11,6 +14,8 @@ public class LensTest extends TestModel {
             Lens.of(RootObj::getNestedObj, (ignore, innerObj) -> new RootObj(innerObj));
     private final Lens<NestedObj, InnerObj> innerObjLens =
             Lens.of(NestedObj::getInnerObj, (ignore, innerInnerObj) -> new NestedObj(innerInnerObj));
+    private final Lens<NestedObj, Optional<InnerObj>> maybeInnerObjLens =
+            Lens.of(NestedObj::getMaybeInnerObj, (ignore, maybeInnerObj) -> new NestedObj(ignore.getInnerObj(), maybeInnerObj));
     private final Lens<InnerObj, String> propertyLens =
             Lens.of(InnerObj::getProperty, (ignore, property) -> new InnerObj(property));
 
@@ -26,6 +31,13 @@ public class LensTest extends TestModel {
         InnerObj created = new InnerObj(null);
         InnerObj updated = propertyLens.set(created).apply("property");
         assertEquals("property", updated.getProperty());
+    }
+
+    @Test
+    public void modify() {
+        InnerObj created = new InnerObj("property");
+        InnerObj modified = propertyLens.modify(created, String::toUpperCase);
+        assertEquals("PROPERTY", modified.getProperty());
     }
 
     @Test
