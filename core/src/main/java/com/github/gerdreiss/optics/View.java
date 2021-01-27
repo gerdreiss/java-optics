@@ -38,6 +38,10 @@ public class View<A, B> implements Function<A, B> {
         return new OptionalView<>((A a) -> that.getOptional(get(a)));
     }
 
+    public <C> StreamView<A, C> andThen(StreamView<B, C> that) {
+        return new StreamView<>((A a) -> that.getStream(get(a)));
+    }
+
     public <C> View<C, B> compose(final View<C, A> that) {
         return that.andThen(this);
     }
