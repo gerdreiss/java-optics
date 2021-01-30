@@ -34,13 +34,11 @@ public class StreamLens<A, B> extends StreamView<A, B> {
     }
 
     public A append(A target, B value) {
-        Stream<B> newStream = Stream.concat(getStream(target), Stream.of(value));
-        return target == null ? null : fset.apply(target, newStream);
+        return target == null ? null : fset.apply(target, Stream.concat(getStream(target), Stream.of(value)));
     }
 
     public A prepend(A target, B value) {
-        Stream<B> newStream = Stream.concat(Stream.of(value), getStream(target));
-        return target == null ? null : fset.apply(target, newStream);
+        return target == null ? null : fset.apply(target, Stream.concat(Stream.of(value), getStream(target)));
     }
 
     public A modify(A target, Function<B, B> modifier) {
@@ -57,7 +55,7 @@ public class StreamLens<A, B> extends StreamView<A, B> {
     public <C> StreamLens<A, Optional<C>> andThen(OptionalLens<B, C> that) {
         return StreamLens.of(
                 (A a) -> getStream(a).map(that::getOptional),
-                (A a, Stream<Optional<C>> cStream) -> set(a, getStream(a).flatMap(b -> cStream.map(c -> that.set(b, c))))
+                (A a, Stream<Optional<C>> maybeCStream) -> set(a, getStream(a).flatMap(b -> maybeCStream.map(c -> that.set(b, c))))
         );
     }
 

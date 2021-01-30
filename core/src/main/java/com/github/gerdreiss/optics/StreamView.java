@@ -20,7 +20,7 @@ public class StreamView<A, B> implements Function<A, Stream<B>> {
     }
 
     public static <A, B> StreamView<A, B> of(final Function<A, Stream<B>> fget) {
-        return StreamView.of(fget);
+        return new StreamView<>(fget);
     }
 
     @Override
@@ -30,6 +30,18 @@ public class StreamView<A, B> implements Function<A, Stream<B>> {
 
     public Stream<B> getStream(A a) {
         return a == null ? Stream.empty() : fget.apply(a);
+    }
+
+    public Optional<B> getFirst(A a) {
+        return a == null ? Optional.empty() : fget.apply(a).findFirst();
+    }
+
+    public Optional<B> getLast(A a) {
+        return a == null ? Optional.empty() : fget.apply(a).reduce((first, second) -> second);
+    }
+
+    public Optional<B> getAt(A a, int n) {
+        return a == null ? Optional.empty() : fget.apply(a).skip(n).findFirst();
     }
 
     public <C> StreamView<A, C> andThen(final View<B, C> that) {

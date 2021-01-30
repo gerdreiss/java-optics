@@ -1,11 +1,14 @@
 package com.github.gerdreiss.optics;
 
 import org.junit.jupiter.api.Test;
+import org.junit.platform.runner.JUnitPlatform;
+import org.junit.runner.RunWith;
 
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+@RunWith(JUnitPlatform.class)
 public class ViewTest extends TestModel {
 
     private final View<RootObj, NestedObj> nestedObjView = View.of(RootObj::getNestedObj);
