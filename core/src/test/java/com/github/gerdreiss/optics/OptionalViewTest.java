@@ -1,10 +1,10 @@
 package com.github.gerdreiss.optics;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.Optional;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class OptionalViewTest extends TestModel {
 
@@ -47,7 +47,7 @@ public class OptionalViewTest extends TestModel {
     }
 
     @Test
-    public void testAndThen() throws Exception {
+    public void testAndThen() {
         OptionalView<RootObj, String> composedPropertyOptional =
                 nestedObjOptional.andThen(innerObjOptional).andThen(propertyOptional);
 
@@ -79,7 +79,7 @@ public class OptionalViewTest extends TestModel {
     }
 
     @Test
-    public void testCompose() throws Exception {
+    public void testCompose() {
         OptionalView<RootObj, String> composedPropertyView =
                 propertyView.compose(innerObjOptional).compose(nestedObjOptional);
         OptionalView<RootObj, String> composedPropertyOptional =

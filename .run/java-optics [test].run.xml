@@ -18,6 +18,7 @@
     </ExternalSystemSettings>
     <ExternalSystemDebugServerProcess>true</ExternalSystemDebugServerProcess>
     <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
+    <extension name="coverage" runner="jacoco" />
     <DebugAllEnabled>false</DebugAllEnabled>
     <method v="2" />
   </configuration>
