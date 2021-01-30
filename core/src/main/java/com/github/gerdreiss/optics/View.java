@@ -39,7 +39,7 @@ public class View<A, B> implements Function<A, B> {
     }
 
     public <C> StreamView<A, C> andThen(StreamView<B, C> that) {
-        return new StreamView<>((A a) -> that.getStream(get(a)));
+        return StreamView.of((A a) -> that.getStream(get(a)));
     }
 
     public <C> View<C, B> compose(final View<C, A> that) {
@@ -47,6 +47,10 @@ public class View<A, B> implements Function<A, B> {
     }
 
     public <C> OptionalView<C, B> compose(final OptionalView<C, A> that) {
+        return that.andThen(this);
+    }
+
+    public <C> StreamView<C, B> compose(final StreamView<C, A> that) {
         return that.andThen(this);
     }
 }

@@ -1,7 +1,10 @@
 package com.github.gerdreiss.optics;
 
+import java.util.Optional;
 import java.util.function.BiFunction;
 import java.util.function.Function;
+import java.util.stream.Stream;
+
 
 /**
  * "A lens is basically a getter/setter that can be used for deep updates of immutable data."
@@ -36,13 +39,35 @@ public class Lens<A, B> extends View<A, B> {
     }
 
     public <C> Lens<A, C> andThen(Lens<B, C> that) {
-        return new Lens<>(
+        return Lens.of(
                 (A a) -> that.get(get(a)),
                 (A a, C c) -> set(a, that.set(get(a), c))
         );
     }
 
+    public <C> OptionalLens<A, C> andThen(OptionalLens<B, C> that) {
+        return OptionalLens.of(
+                (A a) -> that.getOptional(get(a)),
+                (A a, Optional<C> maybeC) -> set(a, that.set(get(a), maybeC))
+        );
+    }
+
+    public <C> StreamLens<A, C> andThen(StreamLens<B, C> that) {
+        return StreamLens.of(
+                (A a) -> that.getStream(get(a)),
+                (A a, Stream<C> maybeC) -> set(a, that.set(get(a), maybeC))
+        );
+    }
+
     public <C> Lens<C, B> compose(Lens<C, A> that) {
+        return that.andThen(this);
+    }
+
+    public <C> OptionalLens<C, B> compose(OptionalLens<C, A> that) {
+        return that.andThen(this);
+    }
+
+    public <C> StreamLens<C, B> compose(StreamLens<C, A> that) {
         return that.andThen(this);
     }
 }

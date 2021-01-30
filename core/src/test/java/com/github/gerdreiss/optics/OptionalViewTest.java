@@ -8,118 +8,103 @@ import static org.junit.Assert.*;
 
 public class OptionalViewTest extends TestModel {
 
+
     private final OptionalView<RootObj, NestedObj> nestedObjOptional =
-            OptionalView.of((RootObj o) -> Optional.ofNullable(o.getNestedObj()));
+            OptionalView.of(RootObj::getMaybeNestedObj);
 
     private final OptionalView<NestedObj, InnerObj> innerObjOptional =
-            OptionalView.of((NestedObj o) -> Optional.ofNullable(o.getInnerObj()));
-
-    private final OptionalView<InnerObj, String> propertyOptional =
-            OptionalView.of((InnerObj o) -> Optional.ofNullable(o.getProperty()));
-
-    private final OptionalView<NestedObj, InnerObj> maybeInnerObjOptional =
             OptionalView.of(NestedObj::getMaybeInnerObj);
 
-    private final OptionalView<InnerObj, String> maybePropertyOptional =
+    private final OptionalView<InnerObj, String> propertyOptional =
             OptionalView.of(InnerObj::getMaybeProperty);
+
 
     private final View<InnerObj, String> propertyView =
             View.of(InnerObj::getProperty);
 
     @Test
     public void testApply() {
-        InnerObj o = new InnerObj(null, Optional.empty());
+        InnerObj o = new InnerObj(PROP);
 
-        assertNull(propertyOptional.apply(o).orElse(null));
-        assertNull(maybePropertyOptional.apply(o).orElse(null));
+        assertFalse(propertyOptional.apply(o).isPresent());
 
-        o = new InnerObj("property", Optional.of("maybeProperty"));
+        o = new InnerObj(PROP, Optional.of(MAYBE_PROP));
 
-        assertEquals(o.getProperty(), propertyOptional.apply(o).orElse(null));
-        assertEquals(o.getMaybeProperty(), maybePropertyOptional.apply(o));
+        assertTrue(propertyOptional.apply(o).isPresent());
+        assertEquals(MAYBE_PROP, propertyOptional.apply(o).get());
     }
 
     @Test
     public void testGetOptional() {
-        InnerObj o = new InnerObj(null, Optional.empty());
+        InnerObj o = new InnerObj(PROP);
 
-        assertNull(propertyOptional.getOptional(o).orElse(null));
-        assertNull(maybePropertyOptional.getOptional(o).orElse(null));
+        assertFalse(propertyOptional.getOptional(o).isPresent());
 
-        o = new InnerObj("property", Optional.of("maybeProperty"));
+        o = new InnerObj(PROP, Optional.of(MAYBE_PROP));
 
-        assertEquals(o.getProperty(), propertyOptional.getOptional(o).orElse(null));
-        assertEquals(o.getMaybeProperty(), maybePropertyOptional.getOptional(o));
+        assertTrue(propertyOptional.getOptional(o).isPresent());
+        assertEquals(MAYBE_PROP, propertyOptional.getOptional(o).get());
     }
 
     @Test
     public void testAndThen() throws Exception {
         OptionalView<RootObj, String> composedPropertyOptional =
                 nestedObjOptional.andThen(innerObjOptional).andThen(propertyOptional);
+
         OptionalView<RootObj, String> composedPropertyView =
-                nestedObjOptional.andThen(maybeInnerObjOptional).andThen(propertyView);
-        OptionalView<RootObj, String> composedMaybePropertyOptional =
-                nestedObjOptional.andThen(innerObjOptional).andThen(maybePropertyOptional);
-        OptionalView<RootObj, String> composedMaybeMaybePropertyOptional =
-                nestedObjOptional.andThen(maybeInnerObjOptional).andThen(maybePropertyOptional);
+                nestedObjOptional.andThen(innerObjOptional).andThen(propertyView);
+
 
         RootObj o = new RootObj(null);
 
         assertFalse(composedPropertyOptional.getOptional(o).isPresent());
         assertFalse(composedPropertyView.getOptional(o).isPresent());
-        assertFalse(composedMaybePropertyOptional.getOptional(o).isPresent());
-        assertFalse(composedMaybeMaybePropertyOptional.getOptional(o).isPresent());
 
-        o = new RootObj(new NestedObj(null, Optional.empty()));
+        o = new RootObj(new NestedObj(null));
 
         assertFalse(composedPropertyOptional.getOptional(o).isPresent());
         assertFalse(composedPropertyView.getOptional(o).isPresent());
-        assertFalse(composedMaybePropertyOptional.getOptional(o).isPresent());
-        assertFalse(composedMaybeMaybePropertyOptional.getOptional(o).isPresent());
 
-        o = new RootObj(new NestedObj(new InnerObj(null, Optional.empty()), Optional.empty()));
+        o = new RootObj(new NestedObj(new InnerObj(PROP)));
 
         assertFalse(composedPropertyOptional.getOptional(o).isPresent());
         assertFalse(composedPropertyView.getOptional(o).isPresent());
-        assertFalse(composedMaybePropertyOptional.getOptional(o).isPresent());
-        assertFalse(composedMaybeMaybePropertyOptional.getOptional(o).isPresent());
 
-        o = new RootObj(new NestedObj(
-                new InnerObj("property", Optional.of("maybeProperty")),
-                Optional.of(new InnerObj("property", Optional.of("maybeProperty")))
-        ));
+        o = new RootObj(null,
+                Optional.of(new NestedObj(null,
+                        Optional.of(new InnerObj(PROP, Optional.of(MAYBE_PROP))))));
 
-        assertEquals(o.getNestedObj().getInnerObj().getProperty(), composedPropertyOptional.getOptional(o).orElse(null));
-        assertEquals(o.getNestedObj().getInnerObj().getProperty(), composedPropertyView.getOptional(o).orElse(null));
-        assertEquals(o.getNestedObj().getInnerObj().getMaybeProperty(), composedMaybePropertyOptional.getOptional(o));
-        assertEquals(o.getNestedObj().getInnerObj().getMaybeProperty(), composedMaybeMaybePropertyOptional.getOptional(o));
+        assertEquals(MAYBE_PROP, composedPropertyOptional.getOptional(o).orElse(null));
+        assertEquals(PROP, composedPropertyView.getOptional(o).orElse(null));
     }
 
     @Test
     public void testCompose() throws Exception {
         OptionalView<RootObj, String> composedPropertyView =
+                propertyView.compose(innerObjOptional).compose(nestedObjOptional);
+        OptionalView<RootObj, String> composedPropertyOptional =
                 propertyOptional.compose(innerObjOptional).compose(nestedObjOptional);
-        OptionalView<RootObj, String> composedMaybePropertyView =
-                maybePropertyOptional.compose(innerObjOptional).compose(nestedObjOptional);
 
         RootObj o = new RootObj(null);
 
         assertFalse(composedPropertyView.getOptional(o).isPresent());
-        assertFalse(composedMaybePropertyView.getOptional(o).isPresent());
+        assertFalse(composedPropertyOptional.getOptional(o).isPresent());
 
         o = new RootObj(new NestedObj(null));
 
         assertFalse(composedPropertyView.getOptional(o).isPresent());
-        assertFalse(composedMaybePropertyView.getOptional(o).isPresent());
+        assertFalse(composedPropertyOptional.getOptional(o).isPresent());
 
-        o = new RootObj(new NestedObj(new InnerObj(null, Optional.empty())));
+        o = new RootObj(new NestedObj(new InnerObj(PROP)));
 
         assertFalse(composedPropertyView.getOptional(o).isPresent());
-        assertFalse(composedMaybePropertyView.getOptional(o).isPresent());
+        assertFalse(composedPropertyOptional.getOptional(o).isPresent());
 
-        o = new RootObj(new NestedObj(new InnerObj("property", Optional.of("maybeProperty"))));
+        o = new RootObj(null,
+                Optional.of(new NestedObj(null,
+                        Optional.of(new InnerObj(PROP, Optional.of(MAYBE_PROP))))));
 
-        assertEquals(o.getNestedObj().getInnerObj().getProperty(), composedPropertyView.getOptional(o).orElse(null));
-        assertEquals(o.getNestedObj().getInnerObj().getMaybeProperty(), composedMaybePropertyView.getOptional(o));
+        assertEquals(PROP, composedPropertyView.getOptional(o).get());
+        assertEquals(MAYBE_PROP, composedPropertyOptional.getOptional(o).get());
     }
 }

@@ -2,6 +2,7 @@ package com.github.gerdreiss.optics;
 
 import java.util.Optional;
 import java.util.function.Function;
+import java.util.stream.Stream;
 
 /**
  * "A lens is basically a getter/setter that can be used for deep updates of immutable data."
@@ -31,19 +32,27 @@ public class OptionalView<A, B> implements Function<A, Optional<B>> {
         return a == null ? Optional.empty() : fget.apply(a);
     }
 
-    public <C> OptionalView<A, C> andThen(final OptionalView<B, C> that) {
-        return new OptionalView<>((A a) -> getOptional(a).flatMap(that::getOptional));
+    public <C> OptionalView<A, C> andThen(final View<B, C> that) {
+        return OptionalView.of((A a) -> getOptional(a).map(that::get));
     }
 
-    public <C> OptionalView<A, C> andThen(final View<B, C> that) {
-        return new OptionalView<>((A a) -> getOptional(a).map(that::get));
+    public <C> OptionalView<A, C> andThen(final OptionalView<B, C> that) {
+        return OptionalView.of((A a) -> getOptional(a).flatMap(that::getOptional));
+    }
+
+    public <C> StreamView<A, C> andThen(final StreamView<B, C> that) {
+        return StreamView.of((A a) -> getOptional(a).map(that::getStream).orElse(Stream.empty()));
+    }
+
+    public <C> OptionalView<C, B> compose(final View<C, A> that) {
+        return that.andThen(this);
     }
 
     public <C> OptionalView<C, B> compose(final OptionalView<C, A> that) {
         return that.andThen(this);
     }
 
-    public <C> OptionalView<C, B> compose(final View<C, A> that) {
+    public <C> StreamView<C, Optional<B>> compose(final StreamView<C, A> that) {
         return that.andThen(this);
     }
 }
