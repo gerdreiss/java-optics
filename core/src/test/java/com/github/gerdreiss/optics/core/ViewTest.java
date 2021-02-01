@@ -1,4 +1,4 @@
-package com.github.gerdreiss.optics;
+package com.github.gerdreiss.optics.core;
 
 import org.junit.jupiter.api.Test;
 import org.junit.platform.runner.JUnitPlatform;

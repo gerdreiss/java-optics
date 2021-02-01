@@ -1,4 +1,4 @@
-package com.github.gerdreiss.optics;
+package com.github.gerdreiss.optics.core;
 
 import java.util.function.Function;
 

@@ -7,7 +7,7 @@ version '0.0.1'
 group 'com.github.gerdreiss'
 
 jar {
-    baseName 'java-optics-core'
+    baseName 'java-optics-interop-vavr'
 }
 
 repositories {
@@ -16,6 +16,8 @@ repositories {
 }
 
 dependencies {
+    implementation project(':core')
+    implementation 'io.vavr:vavr:0.10.3'
     testImplementation 'org.junit.platform:junit-platform-runner:1.7.0'
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.0'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.0'
