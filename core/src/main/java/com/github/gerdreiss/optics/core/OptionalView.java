@@ -25,7 +25,7 @@ public class OptionalView<A, B> implements Function<A, Optional<B>> {
 
     @Override
     public Optional<B> apply(A a) {
-        return a == null ? Optional.empty() : getOptional(a);
+        return getOptional(a);
     }
 
     public Optional<B> getOptional(A a) {

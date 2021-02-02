@@ -25,7 +25,7 @@ public class StreamView<A, B> implements Function<A, Stream<B>> {
 
     @Override
     public Stream<B> apply(A a) {
-        return a == null ? Stream.empty() : getStream(a);
+        return getStream(a);
     }
 
     public Stream<B> getStream(A a) {
