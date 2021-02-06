@@ -13,48 +13,31 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 @RunWith(JUnitPlatform.class)
 public class LensTest extends TestModel {
 
-    private final Lens<RootObj, NestedObj> nestedObjLens = Lens.of(
-            RootObj::getNestedObj,
-            (rootObj, innerObj) -> new RootObj(innerObj, rootObj.getMaybeNestedObj(), rootObj.getNestedObjStream()));
-
-    private final Lens<NestedObj, InnerObj> innerObjLens = Lens.of(
-            NestedObj::getInnerObj,
-            (nestedObj, innerInnerObj) -> new NestedObj(innerInnerObj, nestedObj.getMaybeInnerObj(), nestedObj.getInnerObjStream()));
-
-    private final Lens<InnerObj, String> propertyLens = Lens.of(
-            InnerObj::getProperty,
-            (innerObj, property) -> new InnerObj(property, innerObj.getMaybeProperty(), innerObj.getPropertyStream()));
-
-    private final StreamLens<InnerObj, String> propertyStreamLens = StreamLens.of(
-            InnerObj::getPropertyStream,
-            (innerObj, propertyStream) -> new InnerObj(innerObj.getProperty(), innerObj.getMaybeProperty(), propertyStream));
-
-
     @Test
     public void set() {
         InnerObj created = new InnerObj(null);
-        InnerObj updated = propertyLens.set(created, PROP);
+        InnerObj updated = innerObjPropertyLens.set(created, PROP);
         assertEquals(PROP, updated.getProperty());
     }
 
     @Test
     public void setPartial() {
         InnerObj created = new InnerObj(null);
-        InnerObj updated = propertyLens.set(created).apply(PROP);
+        InnerObj updated = innerObjPropertyLens.set(created).apply(PROP);
         assertEquals(PROP, updated.getProperty());
     }
 
     @Test
     public void modify() {
         InnerObj created = new InnerObj(PROP);
-        InnerObj modified = propertyLens.modify(created, String::toUpperCase);
+        InnerObj modified = innerObjPropertyLens.modify(created, String::toUpperCase);
         assertEquals(PROP.toUpperCase(), modified.getProperty());
     }
 
     @Test
     public void andThen() {
-        Lens<RootObj, String> composedPropertyLens = nestedObjLens.andThen(innerObjLens).andThen(propertyLens);
-        StreamLens<RootObj, String> composedPropertyStreamLens = nestedObjLens.andThen(innerObjLens).andThen(propertyStreamLens);
+        Lens<RootObj, String> composedPropertyLens = rootObjNestedObjLens.andThen(nestedObjInnerObjLens).andThen(innerObjPropertyLens);
+        StreamLens<RootObj, String> composedPropertyStreamLens = rootObjNestedObjLens.andThen(nestedObjInnerObjLens).andThen(innerObjPropertyStreamLens);
 
         RootObj o = new RootObj(null);
 
@@ -92,9 +75,9 @@ public class LensTest extends TestModel {
     @Test
     public void compose() {
         Lens<RootObj, String> composedPropertyLens =
-                propertyLens.compose(innerObjLens).compose(nestedObjLens);
+                innerObjPropertyLens.compose(nestedObjInnerObjLens).compose(rootObjNestedObjLens);
         StreamLens<RootObj, String> composedPropertyStreamLens =
-                propertyStreamLens.compose(innerObjLens).compose(nestedObjLens);
+                innerObjPropertyStreamLens.compose(nestedObjInnerObjLens).compose(rootObjNestedObjLens);
 
         RootObj o = new RootObj(null);
 

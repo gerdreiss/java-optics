@@ -11,53 +11,37 @@ import static org.junit.jupiter.api.Assertions.*;
 @RunWith(JUnitPlatform.class)
 public class OptionalLensTest extends TestModel {
 
-
-    private final OptionalLens<RootObj, NestedObj> nestedObjOptionalLens =
-            OptionalLens.of(
-                    RootObj::getMaybeNestedObj,
-                    (rootObj, maybeNestedObj) -> new RootObj(rootObj.getNestedObj(), maybeNestedObj, rootObj.getNestedObjStream()));
-
-    private final OptionalLens<NestedObj, InnerObj> innerObjOptionalLens =
-            OptionalLens.of(
-                    NestedObj::getMaybeInnerObj,
-                    (nestedObj, maybeInnerObj) -> new NestedObj(nestedObj.getInnerObj(), maybeInnerObj, nestedObj.getInnerObjStream()));
-
-    private final OptionalLens<InnerObj, String> propertyOptionalLens =
-            OptionalLens.of(
-                    InnerObj::getMaybeProperty,
-                    (innerObj, maybeProperty) -> new InnerObj(innerObj.getProperty(), maybeProperty, innerObj.getPropertyStream()));
-
     @Test
     public void set() {
         InnerObj created = new InnerObj(MAYBE_PROP);
-        InnerObj updated = propertyOptionalLens.set(created, Optional.of(MAYBE_PROP));
+        InnerObj updated = innerObjPropertyOptionalLens.set(created, Optional.of(MAYBE_PROP));
 
-        assertTrue(updated.getMaybeProperty().isPresent());
-        assertEquals(MAYBE_PROP, updated.getMaybeProperty().get());
+        assertTrue(updated.getPropertyOptional().isPresent());
+        assertEquals(MAYBE_PROP, updated.getPropertyOptional().get());
     }
 
     @Test
     public void setPartial() {
         InnerObj created = new InnerObj(null);
-        InnerObj updated = propertyOptionalLens.set(created).apply(Optional.of(MAYBE_PROP));
+        InnerObj updated = innerObjPropertyOptionalLens.set(created).apply(Optional.of(MAYBE_PROP));
 
-        assertTrue(updated.getMaybeProperty().isPresent());
-        assertEquals(MAYBE_PROP, updated.getMaybeProperty().get());
+        assertTrue(updated.getPropertyOptional().isPresent());
+        assertEquals(MAYBE_PROP, updated.getPropertyOptional().get());
     }
 
     @Test
     public void modify() {
         InnerObj created = new InnerObj(MAYBE_PROP, Optional.of(MAYBE_PROP));
-        InnerObj updated = propertyOptionalLens.modify(created, String::toUpperCase);
+        InnerObj updated = innerObjPropertyOptionalLens.modify(created, String::toUpperCase);
 
-        assertTrue(updated.getMaybeProperty().isPresent());
-        assertEquals(MAYBE_PROP.toUpperCase(), updated.getMaybeProperty().get());
+        assertTrue(updated.getPropertyOptional().isPresent());
+        assertEquals(MAYBE_PROP.toUpperCase(), updated.getPropertyOptional().get());
     }
 
     @Test
     public void andThen() {
         OptionalLens<RootObj, String> composed =
-                nestedObjOptionalLens.andThen(innerObjOptionalLens).andThen(propertyOptionalLens);
+                rootObjNestedObjOptionalLens.andThen(nestedObjInnerObjOptionalLens).andThen(innerObjPropertyOptionalLens);
 
         RootObj o = new RootObj(null);
 
@@ -87,7 +71,7 @@ public class OptionalLensTest extends TestModel {
 
     @Test
     public void compose() {
-        OptionalLens<RootObj, String> composed = propertyOptionalLens.compose(innerObjOptionalLens).compose(nestedObjOptionalLens);
+        OptionalLens<RootObj, String> composed = innerObjPropertyOptionalLens.compose(nestedObjInnerObjOptionalLens).compose(rootObjNestedObjOptionalLens);
 
         RootObj o = new RootObj(null);
 

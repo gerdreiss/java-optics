@@ -7,18 +7,6 @@ import org.junit.runner.RunWith;
 @RunWith(JUnitPlatform.class)
 class StreamLensTest extends TestModel {
 
-    private final Lens<RootObj, NestedObj> nestedObjLens = Lens.of(
-            RootObj::getNestedObj,
-            (rootObj, innerObj) -> new RootObj(innerObj, rootObj.getMaybeNestedObj(), rootObj.getNestedObjStream()));
-
-    private final Lens<NestedObj, InnerObj> innerObjLens = Lens.of(
-            NestedObj::getInnerObj,
-            (nestedObj, innerInnerObj) -> new NestedObj(innerInnerObj, nestedObj.getMaybeInnerObj(), nestedObj.getInnerObjStream()));
-
-    private final StreamLens<InnerObj, String> propertyStreamLens = StreamLens.of(
-            InnerObj::getPropertyStream,
-            (innerObj, propertyStream) -> new InnerObj(innerObj.getProperty(), innerObj.getMaybeProperty(), propertyStream));
-
 
     @Test
     void set() {

@@ -11,50 +11,38 @@ import static org.junit.jupiter.api.Assertions.*;
 @RunWith(JUnitPlatform.class)
 public class OptionalViewTest extends TestModel {
 
-    private final OptionalView<RootObj, NestedObj> nestedObjOptional =
-            OptionalView.of(RootObj::getMaybeNestedObj);
-
-    private final OptionalView<NestedObj, InnerObj> innerObjOptional =
-            OptionalView.of(NestedObj::getMaybeInnerObj);
-
-    private final OptionalView<InnerObj, String> propertyOptional =
-            OptionalView.of(InnerObj::getMaybeProperty);
-
-
-    private final View<InnerObj, String> propertyView =
-            View.of(InnerObj::getProperty);
 
     @Test
     public void testApply() {
         InnerObj o = new InnerObj(PROP);
 
-        assertFalse(propertyOptional.apply(o).isPresent());
+        assertFalse(innerObjPropertyOptionalView.apply(o).isPresent());
 
         o = new InnerObj(PROP, Optional.of(MAYBE_PROP));
 
-        assertTrue(propertyOptional.apply(o).isPresent());
-        assertEquals(MAYBE_PROP, propertyOptional.apply(o).get());
+        assertTrue(innerObjPropertyOptionalView.apply(o).isPresent());
+        assertEquals(MAYBE_PROP, innerObjPropertyOptionalView.apply(o).get());
     }
 
     @Test
     public void testGetOptional() {
         InnerObj o = new InnerObj(PROP);
 
-        assertFalse(propertyOptional.getOptional(o).isPresent());
+        assertFalse(innerObjPropertyOptionalView.getOptional(o).isPresent());
 
         o = new InnerObj(PROP, Optional.of(MAYBE_PROP));
 
-        assertTrue(propertyOptional.getOptional(o).isPresent());
-        assertEquals(MAYBE_PROP, propertyOptional.getOptional(o).get());
+        assertTrue(innerObjPropertyOptionalView.getOptional(o).isPresent());
+        assertEquals(MAYBE_PROP, innerObjPropertyOptionalView.getOptional(o).get());
     }
 
     @Test
     public void testAndThen() {
         OptionalView<RootObj, String> composedPropertyOptional =
-                nestedObjOptional.andThen(innerObjOptional).andThen(propertyOptional);
+                rootObjNestedObjOptionalView.andThen(nestedObjInnerObjOptionalView).andThen(innerObjPropertyOptionalView);
 
         OptionalView<RootObj, String> composedPropertyView =
-                nestedObjOptional.andThen(innerObjOptional).andThen(propertyView);
+                rootObjNestedObjOptionalView.andThen(nestedObjInnerObjOptionalView).andThen(innerObjPropertyView);
 
 
         RootObj o = new RootObj(null);
@@ -83,9 +71,9 @@ public class OptionalViewTest extends TestModel {
     @Test
     public void testCompose() {
         OptionalView<RootObj, String> composedPropertyView =
-                propertyView.compose(innerObjOptional).compose(nestedObjOptional);
+                innerObjPropertyView.compose(nestedObjInnerObjOptionalView).compose(rootObjNestedObjOptionalView);
         OptionalView<RootObj, String> composedPropertyOptional =
-                propertyOptional.compose(innerObjOptional).compose(nestedObjOptional);
+                innerObjPropertyOptionalView.compose(nestedObjInnerObjOptionalView).compose(rootObjNestedObjOptionalView);
 
         RootObj o = new RootObj(null);
 
