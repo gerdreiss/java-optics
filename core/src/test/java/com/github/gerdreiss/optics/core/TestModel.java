@@ -15,16 +15,24 @@ public abstract class TestModel {
     protected final View<NestedObj, InnerObj> nestedObjInnerObjView = View.of(NestedObj::getInnerObj);
     protected final View<InnerObj, String> innerObjPropertyView = View.of(InnerObj::getProperty);
 
-
     protected final OptionalView<RootObj, NestedObj> rootObjNestedObjOptionalView = OptionalView.of(RootObj::getNestedObjOptional);
     protected final OptionalView<NestedObj, InnerObj> nestedObjInnerObjOptionalView = OptionalView.of(NestedObj::getInnerObjOptional);
     protected final OptionalView<InnerObj, String> innerObjPropertyOptionalView = OptionalView.of(InnerObj::getPropertyOptional);
+
+    protected final StreamView<RootObj, NestedObj> rootObjNestedObjStreamView = StreamView.of(RootObj::getNestedObjStream);
+    protected final StreamView<NestedObj, InnerObj> nestedObjInnerObjStreamView = StreamView.of(NestedObj::getInnerObjStream);
+    protected final StreamView<InnerObj, String> innerObjPropertyStreamView = StreamView.of(InnerObj::getPropertyStream);
+
+    protected final MapView<RootObj, String, NestedObj> rootObjNestedObjMapView = MapView.of(RootObj::getNestedObjMap);
+    protected final MapView<NestedObj, String, InnerObj> nestedObjInnerObjMapView = MapView.of(NestedObj::getInnerObjMap);
+    protected final MapView<InnerObj, String, String> innerObjPropertyMapView = MapView.of(InnerObj::getPropertyMap);
 
 
     /**
      * TEST LENSES
      */
 
+    // Lens
     protected final Lens<RootObj, NestedObj> rootObjNestedObjLens = Lens.of(
             RootObj::getNestedObj,
             (rootObj, innerObj) -> new RootObj(innerObj, rootObj.getNestedObjOptional(), rootObj.getNestedObjStream(), rootObj.getNestedObjMap()));
@@ -37,11 +45,8 @@ public abstract class TestModel {
             InnerObj::getProperty,
             (innerObj, property) -> new InnerObj(property, innerObj.getPropertyOptional(), innerObj.getPropertyStream()));
 
-    protected final StreamLens<InnerObj, String> innerObjPropertyStreamLens = StreamLens.of(
-            InnerObj::getPropertyStream,
-            (innerObj, propertyStream) -> new InnerObj(innerObj.getProperty(), innerObj.getPropertyOptional(), propertyStream));
 
-
+    // OptionalLens
     protected final OptionalLens<RootObj, NestedObj> rootObjNestedObjOptionalLens =
             OptionalLens.of(
                     RootObj::getNestedObjOptional,
@@ -56,6 +61,20 @@ public abstract class TestModel {
             OptionalLens.of(
                     InnerObj::getPropertyOptional,
                     (innerObj, maybeProperty) -> new InnerObj(innerObj.getProperty(), maybeProperty, innerObj.getPropertyStream()));
+
+    // StreamLens
+    protected final StreamLens<RootObj, NestedObj> rootObjNestedObjStreamLens = StreamLens.of(
+            RootObj::getNestedObjStream,
+            (rootObj, nestedObjStream) -> new RootObj(rootObj.getNestedObj(), rootObj.getNestedObjOptional(), nestedObjStream, rootObj.getNestedObjMap()));
+
+    protected final StreamLens<NestedObj, InnerObj> nestedObjInnerObjStreamLens = StreamLens.of(
+            NestedObj::getInnerObjStream,
+            (nestedObj, innerObjStream) -> new NestedObj(nestedObj.getInnerObj(), nestedObj.getInnerObjOptional(), innerObjStream, nestedObj.getInnerObjMap()));
+
+    protected final StreamLens<InnerObj, String> innerObjPropertyStreamLens = StreamLens.of(
+            InnerObj::getPropertyStream,
+            (innerObj, propertyStream) -> new InnerObj(innerObj.getProperty(), innerObj.getPropertyOptional(), propertyStream));
+
 
     /**
      * TEST PROPERTY VALUES
