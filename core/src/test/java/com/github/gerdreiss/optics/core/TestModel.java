@@ -39,28 +39,29 @@ public abstract class TestModel {
 
     protected final Lens<NestedObj, InnerObj> nestedObjInnerObjLens = Lens.of(
             NestedObj::getInnerObj,
-            (nestedObj, innerInnerObj) -> new NestedObj(innerInnerObj, nestedObj.getInnerObjOptional(), nestedObj.getInnerObjStream()));
+            (nestedObj, innerObj) -> new NestedObj(innerObj, nestedObj.getInnerObjOptional(), nestedObj.getInnerObjStream(), nestedObj.getInnerObjMap()));
 
     protected final Lens<InnerObj, String> innerObjPropertyLens = Lens.of(
             InnerObj::getProperty,
-            (innerObj, property) -> new InnerObj(property, innerObj.getPropertyOptional(), innerObj.getPropertyStream()));
+            (innerObj, property) -> new InnerObj(property, innerObj.getPropertyOptional(), innerObj.getPropertyStream(), innerObj.getPropertyMap()));
 
 
     // OptionalLens
     protected final OptionalLens<RootObj, NestedObj> rootObjNestedObjOptionalLens =
             OptionalLens.of(
                     RootObj::getNestedObjOptional,
-                    (rootObj, maybeNestedObj) -> new RootObj(rootObj.getNestedObj(), maybeNestedObj, rootObj.getNestedObjStream()));
+                    (rootObj, maybeNestedObj) -> new RootObj(rootObj.getNestedObj(), maybeNestedObj, rootObj.getNestedObjStream(), rootObj.getNestedObjMap()));
 
     protected final OptionalLens<NestedObj, InnerObj> nestedObjInnerObjOptionalLens =
             OptionalLens.of(
                     NestedObj::getInnerObjOptional,
-                    (nestedObj, maybeInnerObj) -> new NestedObj(nestedObj.getInnerObj(), maybeInnerObj, nestedObj.getInnerObjStream()));
+                    (nestedObj, maybeInnerObj) -> new NestedObj(nestedObj.getInnerObj(), maybeInnerObj, nestedObj.getInnerObjStream(), nestedObj.getInnerObjMap()));
 
     protected final OptionalLens<InnerObj, String> innerObjPropertyOptionalLens =
             OptionalLens.of(
                     InnerObj::getPropertyOptional,
-                    (innerObj, maybeProperty) -> new InnerObj(innerObj.getProperty(), maybeProperty, innerObj.getPropertyStream()));
+                    (innerObj, maybeProperty) -> new InnerObj(innerObj.getProperty(), maybeProperty, innerObj.getPropertyStream(), innerObj.getPropertyMap()));
+
 
     // StreamLens
     protected final StreamLens<RootObj, NestedObj> rootObjNestedObjStreamLens = StreamLens.of(
@@ -73,7 +74,7 @@ public abstract class TestModel {
 
     protected final StreamLens<InnerObj, String> innerObjPropertyStreamLens = StreamLens.of(
             InnerObj::getPropertyStream,
-            (innerObj, propertyStream) -> new InnerObj(innerObj.getProperty(), innerObj.getPropertyOptional(), propertyStream));
+            (innerObj, propertyStream) -> new InnerObj(innerObj.getProperty(), innerObj.getPropertyOptional(), propertyStream, innerObj.getPropertyMap()));
 
 
     /**
@@ -97,7 +98,7 @@ public abstract class TestModel {
         private final Map<String, NestedObj> nestedObjMap;
 
         public RootObj(NestedObj nestedObj) {
-            this(nestedObj, Optional.empty(), Stream.empty());
+            this(nestedObj, Optional.empty());
         }
 
         public RootObj(
@@ -166,7 +167,7 @@ public abstract class TestModel {
                 InnerObj innerObj,
                 Optional<InnerObj> innerObjOptional
         ) {
-            this(innerObj, innerObjOptional, Stream.empty(), Collections.emptyMap());
+            this(innerObj, innerObjOptional, Stream.empty());
         }
 
         public NestedObj(
@@ -224,12 +225,19 @@ public abstract class TestModel {
             this(property, Optional.empty());
         }
 
-        public InnerObj(String property, Optional<String> propertyOptional) {
-            this(property, propertyOptional, Stream.empty(), Collections.emptyMap());
+        public InnerObj(
+                String property,
+                Optional<String> propertyOptional
+        ) {
+            this(property, propertyOptional, Stream.empty());
         }
 
-        public InnerObj(String property, Optional<String> propertyOptional, Stream<String> propertyStream) {
-            this(property, propertyOptional, Stream.empty(), Collections.emptyMap());
+        public InnerObj(
+                String property,
+                Optional<String> propertyOptional,
+                Stream<String> propertyStream
+        ) {
+            this(property, propertyOptional, propertyStream, Collections.emptyMap());
         }
 
         public <T> InnerObj(

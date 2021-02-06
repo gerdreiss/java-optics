@@ -60,7 +60,7 @@ public class LensTest extends TestModel {
         updated = composedPropertyLens.set(o, PROP);
         assertEquals(PROP, composedPropertyLens.get(updated));
 
-        o = new RootObj(new NestedObj(new InnerObj(PROP, Optional.of(MAYBE_PROP), Stream.of(PROP))));
+        o = new RootObj(new NestedObj(new InnerObj(PROP, Optional.empty(), Stream.of(PROP))));
 
         assertEquals(1, composedPropertyStreamLens.getStream(o).count());
 
@@ -94,7 +94,7 @@ public class LensTest extends TestModel {
         updated = composedPropertyLens.set(o, PROP);
         assertEquals(PROP, composedPropertyLens.get(updated));
 
-        o = new RootObj(new NestedObj(new InnerObj(PROP, Optional.of(MAYBE_PROP), Stream.of(PROP))));
+        o = new RootObj(new NestedObj(new InnerObj(PROP, Optional.empty(), Stream.of(PROP))));
 
         assertEquals(1, composedPropertyStreamLens.getStream(o).count());
 

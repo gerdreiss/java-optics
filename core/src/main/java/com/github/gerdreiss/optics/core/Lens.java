@@ -55,7 +55,7 @@ public class Lens<A, B> extends View<A, B> {
     public <C> StreamLens<A, C> andThen(StreamLens<B, C> that) {
         return StreamLens.of(
                 (A a) -> that.getStream(get(a)),
-                (A a, Stream<C> maybeC) -> set(a, that.set(get(a), maybeC))
+                (A a, Stream<C> cStream) -> set(a, that.set(get(a), cStream))
         );
     }
 
