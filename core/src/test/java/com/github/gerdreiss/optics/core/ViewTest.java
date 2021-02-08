@@ -13,7 +13,7 @@ public class ViewTest extends TestModel {
 
     @Test
     public void testApply() {
-        InnerObj o = new InnerObj(null, Optional.empty());
+        var o = new InnerObj(null, Optional.empty());
 
         assertNull(innerObjPropertyView.apply(o));
         assertFalse(innerObjPropertyOptionalView.apply(o).isPresent());
@@ -26,7 +26,7 @@ public class ViewTest extends TestModel {
 
     @Test
     public void testGet() {
-        InnerObj o = new InnerObj(null, Optional.empty());
+        var o = new InnerObj(null, Optional.empty());
 
         assertNull(innerObjPropertyView.get(o));
         assertFalse(innerObjPropertyOptionalView.getOptional(o).isPresent());
@@ -40,16 +40,16 @@ public class ViewTest extends TestModel {
     @Test
     public void testAndThen() {
 
-        View<RootObj, String> composedPropertyView =
+        var composedPropertyView =
                 rootObjNestedObjView.andThen(nestedObjInnerObjView).andThen(innerObjPropertyView);
 
-        OptionalView<RootObj, String> composedMaybePropertyView =
+        var composedMaybePropertyView =
                 rootObjNestedObjView.andThen(nestedObjInnerObjView).andThen(innerObjPropertyOptionalView);
 
-        OptionalView<RootObj, String> composedMaybeMaybePropertyView =
+        var composedMaybeMaybePropertyView =
                 rootObjNestedObjView.andThen(nestedObjInnerObjOptionalView).andThen(innerObjPropertyOptionalView);
 
-        RootObj o = new RootObj(null);
+        var o = new RootObj(null);
 
         assertNull(composedPropertyView.apply(o));
         assertFalse(composedMaybePropertyView.getOptional(o).isPresent());
@@ -80,16 +80,16 @@ public class ViewTest extends TestModel {
     @Test
     public void testCompose() {
 
-        View<RootObj, String> composedPropertyView =
+        var composedPropertyView =
                 innerObjPropertyView.compose(nestedObjInnerObjView).compose(rootObjNestedObjView);
-        OptionalView<RootObj, String> composedMaybePropertyOptional =
+        var composedMaybePropertyOptional =
                 innerObjPropertyOptionalView.compose(nestedObjInnerObjView).compose(rootObjNestedObjView);
-        OptionalView<RootObj, String> composedMaybeMaybePropertyOptional =
+        var composedMaybeMaybePropertyOptional =
                 innerObjPropertyOptionalView.compose(nestedObjInnerObjOptionalView).compose(rootObjNestedObjView);
-        OptionalView<RootObj, String> composedPropertyOptional =
+        var composedPropertyOptional =
                 innerObjPropertyView.compose(nestedObjInnerObjOptionalView).compose(rootObjNestedObjView);
 
-        RootObj o = new RootObj(null);
+        var o = new RootObj(null);
 
         assertNull(composedPropertyView.get(o));
         assertFalse(composedPropertyOptional.getOptional(o).isPresent());

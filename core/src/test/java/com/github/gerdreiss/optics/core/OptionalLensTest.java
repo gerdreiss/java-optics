@@ -13,8 +13,8 @@ public class OptionalLensTest extends TestModel {
 
     @Test
     public void set() {
-        InnerObj created = new InnerObj(PROP);
-        InnerObj updated = innerObjPropertyOptionalLens.set(created, MAYBE_PROP);
+        var created = new InnerObj(PROP);
+        var updated = innerObjPropertyOptionalLens.set(created, MAYBE_PROP);
 
         assertTrue(updated.getPropertyOptional().isPresent());
         assertEquals(MAYBE_PROP, updated.getPropertyOptional());
@@ -22,8 +22,8 @@ public class OptionalLensTest extends TestModel {
 
     @Test
     public void setPartial() {
-        InnerObj created = new InnerObj(null);
-        InnerObj updated = innerObjPropertyOptionalLens.set(created).apply(MAYBE_PROP);
+        var created = new InnerObj(null);
+        var updated = innerObjPropertyOptionalLens.set(created).apply(MAYBE_PROP);
 
         assertTrue(updated.getPropertyOptional().isPresent());
         assertEquals(MAYBE_PROP, updated.getPropertyOptional());
@@ -31,8 +31,8 @@ public class OptionalLensTest extends TestModel {
 
     @Test
     public void modify() {
-        InnerObj created = new InnerObj(PROP, MAYBE_PROP);
-        InnerObj updated = innerObjPropertyOptionalLens.modify(created, String::toUpperCase);
+        var created = new InnerObj(PROP, MAYBE_PROP);
+        var updated = innerObjPropertyOptionalLens.modify(created, String::toUpperCase);
 
         assertTrue(updated.getPropertyOptional().isPresent());
         assertEquals(MAYBE_PROP.map(String::toUpperCase), updated.getPropertyOptional());
@@ -40,12 +40,11 @@ public class OptionalLensTest extends TestModel {
 
     @Test
     public void andThen() {
-        OptionalLens<RootObj, String> composed =
-                rootObjNestedObjOptionalLens.andThen(nestedObjInnerObjOptionalLens).andThen(innerObjPropertyOptionalLens);
+        var composed = rootObjNestedObjOptionalLens.andThen(nestedObjInnerObjOptionalLens).andThen(innerObjPropertyOptionalLens);
 
-        RootObj o = new RootObj(null);
+        var o = new RootObj(null);
 
-        RootObj updated = composed.set(o, MAYBE_PROP);
+        var updated = composed.set(o, MAYBE_PROP);
         assertFalse(composed.getOptional(updated).isPresent());
 
         o = new RootObj(new NestedObj(null));
@@ -71,11 +70,11 @@ public class OptionalLensTest extends TestModel {
 
     @Test
     public void compose() {
-        OptionalLens<RootObj, String> composed = innerObjPropertyOptionalLens.compose(nestedObjInnerObjOptionalLens).compose(rootObjNestedObjOptionalLens);
+        var composed = innerObjPropertyOptionalLens.compose(nestedObjInnerObjOptionalLens).compose(rootObjNestedObjOptionalLens);
 
-        RootObj o = new RootObj(null);
+        var o = new RootObj(null);
 
-        RootObj updated = composed.set(o, MAYBE_PROP);
+        var updated = composed.set(o, MAYBE_PROP);
         assertNull(composed.getOptional(updated).orElse(null));
 
         o = new RootObj(new NestedObj(null));

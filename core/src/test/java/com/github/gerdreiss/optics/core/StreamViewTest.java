@@ -16,7 +16,7 @@ class StreamViewTest extends TestModel {
 
     @Test
     void apply() {
-        InnerObj o = new InnerObj(null);
+        var o = new InnerObj(null);
         assertEquals(0, innerObjPropertyStreamView.apply(o).count());
         o = new InnerObj(null, Optional.empty(), Stream.of("val1", "val2"));
         assertEquals(2, innerObjPropertyStreamView.apply(o).count());
@@ -24,7 +24,7 @@ class StreamViewTest extends TestModel {
 
     @Test
     void getStream() {
-        InnerObj o = new InnerObj(null);
+        var o = new InnerObj(null);
         assertEquals(0, innerObjPropertyStreamView.getStream(o).count());
         o = new InnerObj(null, Optional.empty(), Stream.of("val1", "val2"));
         assertEquals(2, innerObjPropertyStreamView.getStream(o).count());
@@ -32,7 +32,7 @@ class StreamViewTest extends TestModel {
 
     @Test
     void getFirst() {
-        InnerObj o = new InnerObj(null);
+        var o = new InnerObj(null);
         assertEquals(0, innerObjPropertyStreamView.getStream(o).count());
         o = new InnerObj(null, Optional.empty(), Stream.of("val1", "val2"));
         assertEquals(Optional.of("val1"), innerObjPropertyStreamView.getFirst(o));
@@ -40,7 +40,7 @@ class StreamViewTest extends TestModel {
 
     @Test
     void getLast() {
-        InnerObj o = new InnerObj(null);
+        var o = new InnerObj(null);
         assertEquals(0, innerObjPropertyStreamView.getStream(o).count());
         o = new InnerObj(null, Optional.empty(), Stream.of("val1", "val2"));
         assertEquals(Optional.of("val2"), innerObjPropertyStreamView.getLast(o));
@@ -48,7 +48,7 @@ class StreamViewTest extends TestModel {
 
     @Test
     void getAt() {
-        InnerObj o = new InnerObj(null);
+        var o = new InnerObj(null);
         assertEquals(0, innerObjPropertyStreamView.getStream(o).count());
         o = new InnerObj(null, Optional.empty(), Stream.of("val1", "val2"));
         assertEquals(Optional.of("val2"), innerObjPropertyStreamView.getAt(o, 1));
@@ -56,7 +56,7 @@ class StreamViewTest extends TestModel {
 
     @Test
     void getAtOutOfIndexArray() {
-        InnerObj o = new InnerObj(null);
+        var o = new InnerObj(null);
         assertEquals(0, innerObjPropertyStreamView.getStream(o).count());
         o = new InnerObj(null, Optional.empty(), Stream.of("val1", "val2"));
         assertEquals(Optional.empty(), innerObjPropertyStreamView.getAt(o, 2));
@@ -64,65 +64,65 @@ class StreamViewTest extends TestModel {
 
     @Test
     void andThenView() {
-        NestedObj o = new NestedObj(null, Optional.empty(), Stream.of(new InnerObj(PROP)), Collections.emptyMap());
-        StreamView<NestedObj, String> composed = nestedObjInnerObjStreamView.andThen(innerObjPropertyView);
-        Stream<String> properties = composed.getStream(o);
+        var o = new NestedObj(null, Optional.empty(), Stream.of(new InnerObj(PROP)), Collections.emptyMap());
+        var composed = nestedObjInnerObjStreamView.andThen(innerObjPropertyView);
+        var properties = composed.getStream(o);
         assertEquals(Optional.of(PROP), properties.findFirst());
 
     }
 
     @Test
     void andThenOptionalView() {
-        NestedObj o = new NestedObj(null, Optional.empty(), Stream.of(new InnerObj(PROP, MAYBE_PROP)), Collections.emptyMap());
-        StreamView<NestedObj, Optional<String>> composed = nestedObjInnerObjStreamView.andThen(innerObjPropertyOptionalView);
-        Stream<Optional<String>> properties = composed.getStream(o);
-        Optional<Optional<String>> maybeMaybeProperty = properties.findFirst();
+        var o = new NestedObj(null, Optional.empty(), Stream.of(new InnerObj(PROP, MAYBE_PROP)), Collections.emptyMap());
+        var composed = nestedObjInnerObjStreamView.andThen(innerObjPropertyOptionalView);
+        var properties = composed.getStream(o);
+        var maybeMaybeProperty = properties.findFirst();
         assertTrue(maybeMaybeProperty.isPresent());
         assertEquals(MAYBE_PROP, maybeMaybeProperty.get());
     }
 
     @Test
     void andThenStreamView() {
-        NestedObj o = new NestedObj(
+        var o = new NestedObj(
                 null,
                 Optional.empty(),
                 Stream.of(
                         new InnerObj(PROP, MAYBE_PROP, Stream.of("val0", "val1")),
                         new InnerObj(PROP, MAYBE_PROP, Stream.of("val2", "val3"))));
-        StreamView<NestedObj, String> composed = nestedObjInnerObjStreamView.andThen(innerObjPropertyStreamView);
-        Stream<String> properties = composed.getStream(o);
+        var composed = nestedObjInnerObjStreamView.andThen(innerObjPropertyStreamView);
+        var properties = composed.getStream(o);
         assertEquals(4, properties.count());
     }
 
     @Test
     void composeView() {
-        NestedObj o = new NestedObj(null, Optional.empty(), Stream.of(new InnerObj(PROP)), Collections.emptyMap());
-        StreamView<NestedObj, String> composed = innerObjPropertyView.compose(nestedObjInnerObjStreamView);
-        Stream<String> properties = composed.getStream(o);
+        var o = new NestedObj(null, Optional.empty(), Stream.of(new InnerObj(PROP)), Collections.emptyMap());
+        var composed = innerObjPropertyView.compose(nestedObjInnerObjStreamView);
+        var properties = composed.getStream(o);
         assertEquals(Optional.of(PROP), properties.findFirst());
 
     }
 
     @Test
     void composeOptionalView() {
-        NestedObj o = new NestedObj(null, Optional.empty(), Stream.of(new InnerObj(PROP, MAYBE_PROP)), Collections.emptyMap());
-        StreamView<NestedObj, Optional<String>> composed = innerObjPropertyOptionalView.compose(nestedObjInnerObjStreamView);
-        Stream<Optional<String>> properties = composed.getStream(o);
-        Optional<Optional<String>> maybeMaybeProperty = properties.findFirst();
+        var o = new NestedObj(null, Optional.empty(), Stream.of(new InnerObj(PROP, MAYBE_PROP)), Collections.emptyMap());
+        var composed = innerObjPropertyOptionalView.compose(nestedObjInnerObjStreamView);
+        var properties = composed.getStream(o);
+        var maybeMaybeProperty = properties.findFirst();
         assertTrue(maybeMaybeProperty.isPresent());
         assertEquals(MAYBE_PROP, maybeMaybeProperty.get());
     }
 
     @Test
     void composeStreamView() {
-        NestedObj o = new NestedObj(
+        var o = new NestedObj(
                 null,
                 Optional.empty(),
                 Stream.of(
                         new InnerObj(PROP, MAYBE_PROP, Stream.of("val0", "val1")),
                         new InnerObj(PROP, MAYBE_PROP, Stream.of("val2", "val3"))));
-        StreamView<NestedObj, String> composed = innerObjPropertyStreamView.compose(nestedObjInnerObjStreamView);
-        Stream<String> properties = composed.getStream(o);
+        var composed = innerObjPropertyStreamView.compose(nestedObjInnerObjStreamView);
+        var properties = composed.getStream(o);
         assertEquals(4, properties.count());
     }
 }

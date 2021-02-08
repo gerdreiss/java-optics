@@ -4,9 +4,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.platform.runner.JUnitPlatform;
 import org.junit.runner.RunWith;
 
-import java.util.Collection;
 import java.util.Collections;
-import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Stream;
 
@@ -17,13 +15,13 @@ class MapViewTest extends TestModel {
 
     @Test
     void apply() {
-        InnerObj o = new InnerObj(null);
+        var o = new InnerObj(null);
 
         assertTrue(innerObjPropertyMapView.apply(o).isEmpty());
 
         o = new InnerObj(null, Optional.empty(), Stream.empty(), Collections.singletonMap("key", "property"));
 
-        Map<String, String> map = innerObjPropertyMapView.apply(o);
+        var map = innerObjPropertyMapView.apply(o);
         assertFalse(map.isEmpty());
         assertTrue(map.containsKey("key"));
         assertEquals("property", map.get("key"));
@@ -31,13 +29,13 @@ class MapViewTest extends TestModel {
 
     @Test
     void getMap() {
-        InnerObj o = new InnerObj(null);
+        var o = new InnerObj(null);
 
         assertTrue(innerObjPropertyMapView.getMap(o).isEmpty());
 
         o = new InnerObj(null, Optional.empty(), Stream.empty(), Collections.singletonMap("key", "property"));
 
-        Map<String, String> map = innerObjPropertyMapView.getMap(o);
+        var map = innerObjPropertyMapView.getMap(o);
         assertFalse(map.isEmpty());
         assertTrue(map.containsKey("key"));
         assertEquals("property", map.get("key"));
@@ -45,10 +43,10 @@ class MapViewTest extends TestModel {
 
     @Test
     void andThen() {
-        MapView<RootObj, String, InnerObj> rootObjStringInnerObjMapView = rootObjNestedObjMapView.andThen(nestedObjInnerObjView);
-        MapView<RootObj, String, Collection<InnerObj>> rootObjStringCollectionMapView = rootObjNestedObjMapView.andThen(nestedObjInnerObjMapView);
+        var rootObjStringInnerObjMapView = rootObjNestedObjMapView.andThen(nestedObjInnerObjView);
+        var rootObjStringCollectionMapView = rootObjNestedObjMapView.andThen(nestedObjInnerObjMapView);
 
-        RootObj o = new RootObj(null);
+        var o = new RootObj(null);
 
         assertTrue(rootObjStringInnerObjMapView.getMap(o).isEmpty());
         assertTrue(rootObjStringCollectionMapView.getMap(o).isEmpty());
@@ -77,10 +75,10 @@ class MapViewTest extends TestModel {
 
     @Test
     void compose() {
-        MapView<RootObj, String, InnerObj> rootObjStringInnerObjMapView = nestedObjInnerObjView.compose(rootObjNestedObjMapView);
-        MapView<RootObj, String, Collection<InnerObj>> rootObjStringCollectionMapView = nestedObjInnerObjMapView.compose(rootObjNestedObjMapView);
+        var rootObjStringInnerObjMapView = nestedObjInnerObjView.compose(rootObjNestedObjMapView);
+        var rootObjStringCollectionMapView = nestedObjInnerObjMapView.compose(rootObjNestedObjMapView);
 
-        RootObj o = new RootObj(null);
+        var o = new RootObj(null);
 
         assertTrue(rootObjStringInnerObjMapView.getMap(o).isEmpty());
         assertTrue(rootObjStringCollectionMapView.getMap(o).isEmpty());

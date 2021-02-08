@@ -14,7 +14,7 @@ public class OptionalViewTest extends TestModel {
 
     @Test
     public void testApply() {
-        InnerObj o = new InnerObj(PROP);
+        var o = new InnerObj(PROP);
 
         assertFalse(innerObjPropertyOptionalView.apply(o).isPresent());
 
@@ -26,7 +26,7 @@ public class OptionalViewTest extends TestModel {
 
     @Test
     public void testGetOptional() {
-        InnerObj o = new InnerObj(PROP);
+        var o = new InnerObj(PROP);
 
         assertFalse(innerObjPropertyOptionalView.getOptional(o).isPresent());
 
@@ -38,14 +38,14 @@ public class OptionalViewTest extends TestModel {
 
     @Test
     public void testAndThen() {
-        OptionalView<RootObj, String> composedPropertyOptional =
+        var composedPropertyOptional =
                 rootObjNestedObjOptionalView.andThen(nestedObjInnerObjOptionalView).andThen(innerObjPropertyOptionalView);
 
-        OptionalView<RootObj, String> composedPropertyView =
+        var composedPropertyView =
                 rootObjNestedObjOptionalView.andThen(nestedObjInnerObjOptionalView).andThen(innerObjPropertyView);
 
 
-        RootObj o = new RootObj(null);
+        var o = new RootObj(null);
 
         assertFalse(composedPropertyOptional.getOptional(o).isPresent());
         assertFalse(composedPropertyView.getOptional(o).isPresent());
@@ -70,12 +70,12 @@ public class OptionalViewTest extends TestModel {
 
     @Test
     public void testCompose() {
-        OptionalView<RootObj, String> composedPropertyView =
+        var composedPropertyView =
                 innerObjPropertyView.compose(nestedObjInnerObjOptionalView).compose(rootObjNestedObjOptionalView);
-        OptionalView<RootObj, String> composedPropertyOptional =
+        var composedPropertyOptional =
                 innerObjPropertyOptionalView.compose(nestedObjInnerObjOptionalView).compose(rootObjNestedObjOptionalView);
 
-        RootObj o = new RootObj(null);
+        var o = new RootObj(null);
 
         assertFalse(composedPropertyView.getOptional(o).isPresent());
         assertFalse(composedPropertyOptional.getOptional(o).isPresent());

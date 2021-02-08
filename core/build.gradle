@@ -3,6 +3,13 @@ plugins {
     id 'java-library'
 }
 
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(15)
+    }
+}
+
+
 version '0.0.1'
 group 'com.github.gerdreiss'
 

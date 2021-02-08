@@ -9,12 +9,12 @@ class StreamLensTest extends TestModel {
 
 
     @Test
-    void set() {
+    void setStream() {
         // TODO
     }
 
     @Test
-    void testSet() {
+    void setValue() {
         // TODO
     }
 

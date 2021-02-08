@@ -83,7 +83,6 @@ public abstract class TestModel {
     protected static final String PROP = "property";
     protected static final Optional<String> MAYBE_PROP = Optional.of("propertyOptional");
 
-
     /**
      * The root object that contains
      * a nested obj,
