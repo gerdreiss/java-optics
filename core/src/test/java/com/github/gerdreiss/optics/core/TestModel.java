@@ -80,8 +80,8 @@ public abstract class TestModel {
     /**
      * TEST PROPERTY VALUES
      */
-    protected static final String PROP = "prop";
-    protected static final String MAYBE_PROP = "maybeProp";
+    protected static final String PROP = "property";
+    protected static final Optional<String> MAYBE_PROP = Optional.of("propertyOptional");
 
 
     /**

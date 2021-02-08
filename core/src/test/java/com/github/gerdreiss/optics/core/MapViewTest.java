@@ -15,8 +15,6 @@ import static org.junit.jupiter.api.Assertions.*;
 @RunWith(JUnitPlatform.class)
 class MapViewTest extends TestModel {
 
-    // TODO add tests
-
     @Test
     void apply() {
         InnerObj o = new InnerObj(null);

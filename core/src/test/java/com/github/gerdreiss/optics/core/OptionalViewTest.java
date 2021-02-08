@@ -18,10 +18,10 @@ public class OptionalViewTest extends TestModel {
 
         assertFalse(innerObjPropertyOptionalView.apply(o).isPresent());
 
-        o = new InnerObj(PROP, Optional.of(MAYBE_PROP));
+        o = new InnerObj(PROP, MAYBE_PROP);
 
         assertTrue(innerObjPropertyOptionalView.apply(o).isPresent());
-        assertEquals(MAYBE_PROP, innerObjPropertyOptionalView.apply(o).get());
+        assertEquals(MAYBE_PROP, innerObjPropertyOptionalView.apply(o));
     }
 
     @Test
@@ -30,10 +30,10 @@ public class OptionalViewTest extends TestModel {
 
         assertFalse(innerObjPropertyOptionalView.getOptional(o).isPresent());
 
-        o = new InnerObj(PROP, Optional.of(MAYBE_PROP));
+        o = new InnerObj(PROP, MAYBE_PROP);
 
         assertTrue(innerObjPropertyOptionalView.getOptional(o).isPresent());
-        assertEquals(MAYBE_PROP, innerObjPropertyOptionalView.getOptional(o).get());
+        assertEquals(MAYBE_PROP, innerObjPropertyOptionalView.getOptional(o));
     }
 
     @Test
@@ -62,9 +62,9 @@ public class OptionalViewTest extends TestModel {
 
         o = new RootObj(null,
                 Optional.of(new NestedObj(null,
-                        Optional.of(new InnerObj(PROP, Optional.of(MAYBE_PROP))))));
+                        Optional.of(new InnerObj(PROP, MAYBE_PROP)))));
 
-        assertEquals(MAYBE_PROP, composedPropertyOptional.getOptional(o).orElse(null));
+        assertEquals(MAYBE_PROP, composedPropertyOptional.getOptional(o));
         assertEquals(PROP, composedPropertyView.getOptional(o).orElse(null));
     }
 
@@ -92,9 +92,9 @@ public class OptionalViewTest extends TestModel {
 
         o = new RootObj(null,
                 Optional.of(new NestedObj(null,
-                        Optional.of(new InnerObj(PROP, Optional.of(MAYBE_PROP))))));
+                        Optional.of(new InnerObj(PROP, MAYBE_PROP)))));
 
         assertEquals(PROP, composedPropertyView.getOptional(o).get());
-        assertEquals(MAYBE_PROP, composedPropertyOptional.getOptional(o).get());
+        assertEquals(MAYBE_PROP, composedPropertyOptional.getOptional(o));
     }
 }
