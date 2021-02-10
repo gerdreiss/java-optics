@@ -7,6 +7,15 @@
  * in the user manual at https://docs.gradle.org/6.8.2/userguide/multi_project_builds.html
  */
 
+pluginManagement {
+    plugins {
+        id 'com.diffplug.spotless' version '5.10.0'
+    }
+}
+plugins {
+    id 'com.diffplug.spotless' apply false
+}
+
 rootProject.name = 'java-optics'
 
 include ':core'
