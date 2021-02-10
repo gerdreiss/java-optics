@@ -42,6 +42,10 @@ public class View<A, B> implements Function<A, B> {
         return StreamView.of((A a) -> that.getStream(get(a)));
     }
 
+    public <C> CollectionView<A, C> andThen(CollectionView<B, C> that) {
+        return CollectionView.of((A a) -> that.getCollection(get(a)));
+    }
+
     public <K, V> MapView<A, K, V> andThen(MapView<B, K, V> that) {
         return MapView.of((A a) -> that.getMap(get(a)));
     }
@@ -55,6 +59,10 @@ public class View<A, B> implements Function<A, B> {
     }
 
     public <C> StreamView<C, B> compose(final StreamView<C, A> that) {
+        return that.andThen(this);
+    }
+
+    public <C> CollectionView<C, B> compose(final CollectionView<C, A> that) {
         return that.andThen(this);
     }
 

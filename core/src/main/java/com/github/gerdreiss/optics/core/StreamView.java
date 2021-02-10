@@ -2,6 +2,7 @@ package com.github.gerdreiss.optics.core;
 
 import java.util.Optional;
 import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 /**
@@ -42,6 +43,14 @@ public class StreamView<A, B> implements Function<A, Stream<B>> {
 
     public Optional<B> getAt(A a, int n) {
         return a == null ? Optional.empty() : fget.apply(a).skip(n).findFirst();
+    }
+
+    public Stream<B> find(A a, Predicate<B> predicate) {
+        return a == null ? Stream.empty() : fget.apply(a).filter(predicate);
+    }
+
+    public Optional<B> findFirst(A a, Predicate<B> predicate) {
+        return find(a, predicate).findFirst();
     }
 
     public <C> StreamView<A, C> andThen(final View<B, C> that) {

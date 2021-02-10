@@ -3,8 +3,10 @@ package com.github.gerdreiss.optics.interop.vavr;
 import com.github.gerdreiss.optics.core.View;
 import io.vavr.collection.List;
 import io.vavr.collection.Traversable;
+import io.vavr.control.Option;
 
 import java.util.function.Function;
+import java.util.function.Predicate;
 
 public class TraversableView<A, B> implements Function<A, Traversable<B>> {
 
@@ -25,6 +27,26 @@ public class TraversableView<A, B> implements Function<A, Traversable<B>> {
 
     public Traversable<B> getTraversable(A a) {
         return a == null ? List.empty() : fget.apply(a);
+    }
+
+    public Option<B> getFirst(A a) {
+        return a == null ? Option.none() : fget.apply(a).headOption();
+    }
+
+    public Option<B> getLast(A a) {
+        return a == null ? Option.none() : fget.apply(a).lastOption();
+    }
+
+    public Option<B> getAt(A a, int n) {
+        return a == null ? Option.none() : fget.apply(a).drop(n).headOption();
+    }
+
+    public Traversable<B> find(A a, Predicate<B> predicate) {
+        return a == null ? List.empty() : fget.apply(a).filter(predicate);
+    }
+
+    public Option<B> findFirst(A a, Predicate<B> predicate) {
+        return find(a, predicate).headOption();
     }
 
     public <C> TraversableView<A, C> andThen(final View<B, C> that) {

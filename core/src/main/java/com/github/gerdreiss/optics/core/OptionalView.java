@@ -1,5 +1,6 @@
 package com.github.gerdreiss.optics.core;
 
+import java.util.Collections;
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Stream;
@@ -44,6 +45,10 @@ public class OptionalView<A, B> implements Function<A, Optional<B>> {
         return StreamView.of((A a) -> getOptional(a).map(that::getStream).orElse(Stream.empty()));
     }
 
+    public <C> CollectionView<A, C> andThen(final CollectionView<B, C> that) {
+        return CollectionView.of((A a) -> getOptional(a).map(that::getCollection).orElse(Collections.emptyList()));
+    }
+
     public <C> OptionalView<C, B> compose(final View<C, A> that) {
         return that.andThen(this);
     }
@@ -53,6 +58,10 @@ public class OptionalView<A, B> implements Function<A, Optional<B>> {
     }
 
     public <C> StreamView<C, Optional<B>> compose(final StreamView<C, A> that) {
+        return that.andThen(this);
+    }
+
+    public <C> CollectionView<C, Optional<B>> compose(final CollectionView<C, A> that) {
         return that.andThen(this);
     }
 }
