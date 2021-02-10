@@ -1,6 +1,6 @@
-
 plugins {
     id 'java-library'
+    id 'com.diffplug.spotless' version '5.10.0'
 }
 
 java {
@@ -25,8 +25,16 @@ dependencies {
     testImplementation 'org.junit.platform:junit-platform-runner:1.7.0'
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.0'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.0'
+
 }
 
 test {
     useJUnitPlatform()
 }
+
+// TODO
+//spotless {
+//    java {
+//        googleJavaFormat()
+//    }
+//}

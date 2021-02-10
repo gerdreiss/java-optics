@@ -8,6 +8,7 @@
  */
 
 rootProject.name = 'java-optics'
-include 'core'
-include 'interop-vavr'
+
+include ':core'
+include ':interop-vavr'
 
