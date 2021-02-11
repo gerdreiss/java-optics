@@ -1,10 +1,24 @@
+/*
+ * Copyright 2021 DiffPlug
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.github.gerdreiss.optics.core;
 
 import java.util.Optional;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.stream.Stream;
-
 
 /**
  * "A lens is basically a getter/setter that can be used for deep updates of immutable data."
@@ -39,24 +53,19 @@ public class Lens<A, B> extends View<A, B> {
     }
 
     public <C> Lens<A, C> andThen(Lens<B, C> that) {
-        return Lens.of(
-                (A a) -> that.get(get(a)),
-                (A a, C c) -> set(a, that.set(get(a), c))
-        );
+        return Lens.of((A a) -> that.get(get(a)), (A a, C c) -> set(a, that.set(get(a), c)));
     }
 
     public <C> OptionalLens<A, C> andThen(OptionalLens<B, C> that) {
         return OptionalLens.of(
                 (A a) -> that.getOptional(get(a)),
-                (A a, Optional<C> maybeC) -> set(a, that.set(get(a), maybeC))
-        );
+                (A a, Optional<C> maybeC) -> set(a, that.set(get(a), maybeC)));
     }
 
     public <C> StreamLens<A, C> andThen(StreamLens<B, C> that) {
         return StreamLens.of(
                 (A a) -> that.getStream(get(a)),
-                (A a, Stream<C> cStream) -> set(a, that.set(get(a), cStream))
-        );
+                (A a, Stream<C> cStream) -> set(a, that.set(get(a), cStream)));
     }
 
     public <C> Lens<C, B> compose(Lens<C, A> that) {

@@ -1,3 +1,18 @@
+/*
+ * Copyright 2021 DiffPlug
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.github.gerdreiss.optics.core;
 
 import java.util.Optional;
@@ -21,7 +36,8 @@ public class OptionalLens<A, B> extends OptionalView<A, B> {
         this.fset = fset;
     }
 
-    public static <A, B> OptionalLens<A, B> of(Function<A, Optional<B>> fget, BiFunction<A, Optional<B>, A> fset) {
+    public static <A, B> OptionalLens<A, B> of(
+            Function<A, Optional<B>> fget, BiFunction<A, Optional<B>, A> fset) {
         return new OptionalLens<>(fget, fset);
     }
 
@@ -44,22 +60,20 @@ public class OptionalLens<A, B> extends OptionalView<A, B> {
     public <C> OptionalLens<A, C> andThen(Lens<B, C> that) {
         return OptionalLens.of(
                 (A a) -> getOptional(a).map(that::get),
-                (A a, Optional<C> maybeC) -> set(a, getOptional(a).flatMap(b -> maybeC.map(c -> that.set(b, c))))
-        );
+                (A a, Optional<C> maybeC) ->
+                        set(a, getOptional(a).flatMap(b -> maybeC.map(c -> that.set(b, c)))));
     }
 
     public <C> OptionalLens<A, C> andThen(OptionalLens<B, C> that) {
         return OptionalLens.of(
                 (A a) -> getOptional(a).flatMap(that::getOptional),
-                (A a, Optional<C> maybeC) -> set(a, getOptional(a).map(b -> that.set(b, maybeC)))
-        );
+                (A a, Optional<C> maybeC) -> set(a, getOptional(a).map(b -> that.set(b, maybeC))));
     }
 
     public <C> StreamLens<A, C> andThen(StreamLens<B, C> that) {
         return StreamLens.of(
                 (A a) -> getOptional(a).map(that::getStream).orElse(Stream.empty()),
-                (A a, Stream<C> cStream) -> set(a, getOptional(a).map(b -> that.set(b, cStream)))
-        );
+                (A a, Stream<C> cStream) -> set(a, getOptional(a).map(b -> that.set(b, cStream))));
     }
 
     public <C> OptionalLens<C, B> compose(Lens<C, A> that) {
@@ -73,5 +87,4 @@ public class OptionalLens<A, B> extends OptionalView<A, B> {
     public <C> StreamLens<C, Optional<B>> compose(StreamLens<C, A> that) {
         return that.andThen(this);
     }
-
 }

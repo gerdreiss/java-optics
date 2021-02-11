@@ -1,6 +1,5 @@
 plugins {
     id 'java-library'
-    id 'com.diffplug.spotless'
 }
 
 java {
@@ -17,7 +16,6 @@ jar {
 }
 
 repositories {
-    jcenter()
     mavenCentral()
 }
 
@@ -32,10 +30,3 @@ dependencies {
 test {
     useJUnitPlatform()
 }
-
-// TODO
-//spotless {
-//    java {
-//        googleJavaFormat()
-//    }
-//}

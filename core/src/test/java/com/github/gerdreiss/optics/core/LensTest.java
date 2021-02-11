@@ -1,14 +1,28 @@
+/*
+ * Copyright 2021 DiffPlug
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.github.gerdreiss.optics.core;
-
-import org.junit.jupiter.api.Test;
-import org.junit.platform.runner.JUnitPlatform;
-import org.junit.runner.RunWith;
-
-import java.util.Optional;
-import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
+
+import java.util.Optional;
+import java.util.stream.Stream;
+import org.junit.jupiter.api.Test;
+import org.junit.platform.runner.JUnitPlatform;
+import org.junit.runner.RunWith;
 
 @RunWith(JUnitPlatform.class)
 public class LensTest extends TestModel {
@@ -36,8 +50,12 @@ public class LensTest extends TestModel {
 
     @Test
     public void andThen() {
-        var composedPropertyLens = rootObjNestedObjLens.andThen(nestedObjInnerObjLens).andThen(innerObjPropertyLens);
-        var composedPropertyStreamLens = rootObjNestedObjLens.andThen(nestedObjInnerObjLens).andThen(innerObjPropertyStreamLens);
+        var composedPropertyLens =
+                rootObjNestedObjLens.andThen(nestedObjInnerObjLens).andThen(innerObjPropertyLens);
+        var composedPropertyStreamLens =
+                rootObjNestedObjLens
+                        .andThen(nestedObjInnerObjLens)
+                        .andThen(innerObjPropertyStreamLens);
 
         var o = new RootObj(null);
 
@@ -69,7 +87,6 @@ public class LensTest extends TestModel {
 
         updated = composedPropertyLens.modify(updated, String::toUpperCase);
         assertEquals("NEWPROPERTY", composedPropertyLens.get(updated));
-
     }
 
     @Test
@@ -77,7 +94,9 @@ public class LensTest extends TestModel {
         var composedPropertyLens =
                 innerObjPropertyLens.compose(nestedObjInnerObjLens).compose(rootObjNestedObjLens);
         var composedPropertyStreamLens =
-                innerObjPropertyStreamLens.compose(nestedObjInnerObjLens).compose(rootObjNestedObjLens);
+                innerObjPropertyStreamLens
+                        .compose(nestedObjInnerObjLens)
+                        .compose(rootObjNestedObjLens);
 
         var o = new RootObj(null);
 
