@@ -50,7 +50,8 @@ public class ViewTest extends TestModel {
         innerObj = new InnerObj("property", Optional.of("maybeProperty"));
 
         assertEquals(innerObj.getProperty(), innerObjPropertyView.get(innerObj));
-        assertEquals(innerObj.getPropertyOptional(), innerObjPropertyOptionalView.getOptional(innerObj));
+        assertEquals(
+                innerObj.getPropertyOptional(), innerObjPropertyOptionalView.getOptional(innerObj));
     }
 
     @Test
@@ -94,7 +95,9 @@ public class ViewTest extends TestModel {
                                 Optional.of(
                                         new InnerObj("property", Optional.of("maybeProperty")))));
 
-        assertEquals(rootObj.getNestedObj().getInnerObj().getProperty(), composedPropertyView.get(rootObj));
+        assertEquals(
+                rootObj.getNestedObj().getInnerObj().getProperty(),
+                composedPropertyView.get(rootObj));
         assertEquals(
                 rootObj.getNestedObj().getInnerObj().getPropertyOptional(),
                 composedMaybePropertyView.getOptional(rootObj));
@@ -149,7 +152,9 @@ public class ViewTest extends TestModel {
                                 Optional.of(
                                         new InnerObj("property", Optional.of("maybeProperty")))));
 
-        assertEquals(rootObj.getNestedObj().getInnerObj().getProperty(), composedPropertyView.get(rootObj));
+        assertEquals(
+                rootObj.getNestedObj().getInnerObj().getProperty(),
+                composedPropertyView.get(rootObj));
         assertEquals(
                 rootObj.getNestedObj().getInnerObj().getProperty(),
                 composedPropertyOptional.getOptional(rootObj).orElse(null));
