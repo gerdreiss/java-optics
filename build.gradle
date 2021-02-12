@@ -12,6 +12,7 @@ subprojects {
     apply plugin: 'com.diffplug.spotless'
     spotless {
         java {
+            toggleOffOn('formatter:off', 'formatter:on')
             trimTrailingWhitespace()
             indentWithSpaces()
             endWithNewline()
@@ -23,4 +24,14 @@ subprojects {
             licenseHeaderFile rootProject.file('gradle/spotless.license')
         }
     }
+    afterEvaluate {
+        def spotless = tasks.findByName('spotlessApply')
+        if (spotless) {
+            tasks.withType(JavaCompile) {
+                finalizedBy(spotless)
+            }
+        }
+    }
 }
+
+
