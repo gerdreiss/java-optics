@@ -97,35 +97,65 @@ class StreamLensTest extends TestModel {
                 updated.getInnerObjStream().map(InnerObj::getPropertyOptional).findFirst());
     }
 
-    // TODO
-    //    @Test
-    //    void andThenStream() {
-    //        var composed = nestedObjInnerObjStreamLens.andThen(innerObjPropertyStreamLens);
+    // formatter:off
+    // TODO composing stream views seems to break the lenses - some streams are closed before they can be used
+    //@Test
+    //void andThenStream() {
+    //    var composed = nestedObjInnerObjStreamLens.andThen(innerObjPropertyStreamLens);
     //
-    //        var nestedObj = new NestedObj(null, Optional.empty(), Stream.empty());
-    //        var updated = composed.set(nestedObj, Stream.of("streamed1", "streamed2"));
-    //        // assertEquals(0, composed.getStream(updated).count());
-    //
-    //        var innerObj1 = new InnerObj(null, Optional.empty(), Stream.empty());
-    //        var innerObj2 = new InnerObj(null, Optional.empty(), Stream.empty());
-    //        nestedObj = new NestedObj(null, Optional.empty(), Stream.of(innerObj1, innerObj2));
-    //        updated = composed.set(nestedObj, Stream.of("streamed1", "streamed2"));
-    //        assertEquals(4,
-    // updated.getInnerObjStream().flatMap(InnerObj::getPropertyStream).count());
-    //    }
+    //    var nestedObj =
+    //            new NestedObj(
+    //                    null, Optional.empty(), Stream.of(new InnerObj(null), new InnerObj(null)));
+    //    var updated = composed.set(nestedObj, Stream.of("streamed1", "streamed2"));
+    //    assertEquals(4, updated.getInnerObjStream().flatMap(InnerObj::getPropertyStream).count());
+    //}
+    // formatter:on
 
     @Test
     void composeLens() {
-        // TODO
+        var composed = innerObjPropertyLens.compose(nestedObjInnerObjStreamLens);
+
+        var nestedObj = new NestedObj(null, Optional.empty(), Stream.empty());
+        var updated = composed.set(nestedObj, Stream.of("streamed1", "streamed2"));
+        assertEquals(0, composed.getStream(updated).count());
+
+        nestedObj = new NestedObj(null, Optional.empty(), Stream.of(new InnerObj(null)));
+        updated = composed.set(nestedObj, Stream.of("streamed1", "streamed2"));
+        assertEquals(
+                Optional.of("streamed1"),
+                updated.getInnerObjStream().map(InnerObj::getProperty).findFirst());
     }
 
     @Test
     void composeOptional() {
-        // TODO
+        var composed = innerObjPropertyOptionalLens.compose(nestedObjInnerObjStreamLens);
+
+        var nestedObj = new NestedObj(null, Optional.empty(), Stream.empty());
+        var updated =
+                composed.set(
+                        nestedObj, Stream.of(Optional.of("streamed1"), Optional.of("streamed2")));
+        assertEquals(0, composed.getStream(updated).count());
+
+        nestedObj = new NestedObj(null, Optional.empty(), Stream.of(new InnerObj(null)));
+        updated =
+                composed.set(
+                        nestedObj, Stream.of(Optional.of("streamed1"), Optional.of("streamed2")));
+        assertEquals(
+                Optional.of(Optional.of("streamed1")),
+                updated.getInnerObjStream().map(InnerObj::getPropertyOptional).findFirst());
     }
 
-    @Test
-    void composeStream() {
-        // TODO
-    }
+    // formatter:off
+    // TODO composing stream views seems to break the lenses - some streams are closed before they can be used
+    //@Test
+    //void composeStream() {
+    //    var composed = innerObjPropertyStreamLens.compose(nestedObjInnerObjStreamLens);
+    //
+    //    var nestedObj =
+    //            new NestedObj(
+    //                    null, Optional.empty(), Stream.of(new InnerObj(null), new InnerObj(null)));
+    //    var updated = composed.set(nestedObj, Stream.of("streamed1", "streamed2"));
+    //    assertEquals(4, updated.getInnerObjStream().flatMap(InnerObj::getPropertyStream).count());
+    //}
+    // formatter:on
 }
