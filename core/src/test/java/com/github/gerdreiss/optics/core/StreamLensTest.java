@@ -97,6 +97,7 @@ class StreamLensTest extends TestModel {
                 updated.getInnerObjStream().map(InnerObj::getPropertyOptional).findFirst());
     }
 
+    // TODO
     //    @Test
     //    void andThenStream() {
     //        var composed = nestedObjInnerObjStreamLens.andThen(innerObjPropertyStreamLens);
