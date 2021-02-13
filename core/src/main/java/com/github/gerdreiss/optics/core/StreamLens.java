@@ -79,7 +79,8 @@ public class StreamLens<A, B> extends StreamView<A, B> {
                         set(a, getStream(a).flatMap(b -> maybeCStream.map(c -> that.set(b, c)))));
     }
 
-    // TODO composing stream views seems to break the lenses - some streams are closed before they can be used
+    // TODO composing stream views seems to break the lenses - some streams are closed before they
+    // can be used
     public <C> StreamLens<A, C> andThen(StreamLens<B, C> that) {
         return StreamLens.of(
                 (A a) -> getStream(a).flatMap(that::getStream),
@@ -94,7 +95,8 @@ public class StreamLens<A, B> extends StreamView<A, B> {
         return that.andThen(this);
     }
 
-    // TODO composing stream views seems to break the lenses - some streams are closed before they can be used
+    // TODO composing stream views seems to break the lenses - some streams are closed before they
+    // can be used
     public <C> StreamLens<C, B> compose(StreamLens<C, A> that) {
         return that.andThen(this);
     }

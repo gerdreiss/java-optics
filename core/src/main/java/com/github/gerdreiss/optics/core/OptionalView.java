@@ -17,6 +17,7 @@ package com.github.gerdreiss.optics.core;
 
 import java.util.Collections;
 import java.util.Optional;
+import java.util.PriorityQueue;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
@@ -65,6 +66,20 @@ public class OptionalView<A, B> implements Function<A, Optional<B>> {
                 (A a) -> getOptional(a).map(that::getCollection).orElse(Collections.emptyList()));
     }
 
+    public <C> ListView<A, C> andThen(final ListView<B, C> that) {
+        return ListView.of(
+                (A a) -> getOptional(a).map(that::getList).orElse(Collections.emptyList()));
+    }
+
+    public <C> SetView<A, C> andThen(final SetView<B, C> that) {
+        return SetView.of((A a) -> getOptional(a).map(that::getSet).orElse(Collections.emptySet()));
+    }
+
+    public <C> QueueView<A, C> andThen(final QueueView<B, C> that) {
+        return QueueView.of(
+                (A a) -> getOptional(a).map(that::getQueue).orElse(new PriorityQueue<>()));
+    }
+
     public <C> OptionalView<C, B> compose(final View<C, A> that) {
         return that.andThen(this);
     }
@@ -78,6 +93,14 @@ public class OptionalView<A, B> implements Function<A, Optional<B>> {
     }
 
     public <C> CollectionView<C, Optional<B>> compose(final CollectionView<C, A> that) {
+        return that.andThen(this);
+    }
+
+    public <C> ListView<C, Optional<B>> compose(final ListView<C, A> that) {
+        return that.andThen(this);
+    }
+
+    public <C> SetView<C, Optional<B>> compose(final SetView<C, A> that) {
         return that.andThen(this);
     }
 }

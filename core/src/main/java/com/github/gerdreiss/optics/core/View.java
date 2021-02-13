@@ -61,6 +61,18 @@ public class View<A, B> implements Function<A, B> {
         return CollectionView.of((A a) -> that.getCollection(get(a)));
     }
 
+    public <C> ListView<A, C> andThen(ListView<B, C> that) {
+        return ListView.of((A a) -> that.getList(get(a)));
+    }
+
+    public <C> SetView<A, C> andThen(SetView<B, C> that) {
+        return SetView.of((A a) -> that.getSet(get(a)));
+    }
+
+    public <C> QueueView<A, C> andThen(QueueView<B, C> that) {
+        return QueueView.of((A a) -> that.getQueue(get(a)));
+    }
+
     public <K, V> MapView<A, K, V> andThen(MapView<B, K, V> that) {
         return MapView.of((A a) -> that.getMap(get(a)));
     }
@@ -78,6 +90,14 @@ public class View<A, B> implements Function<A, B> {
     }
 
     public <C> CollectionView<C, B> compose(final CollectionView<C, A> that) {
+        return that.andThen(this);
+    }
+
+    public <C> ListView<C, B> compose(final ListView<C, A> that) {
+        return that.andThen(this);
+    }
+
+    public <C> QueueView<C, B> compose(final QueueView<C, A> that) {
         return that.andThen(this);
     }
 
