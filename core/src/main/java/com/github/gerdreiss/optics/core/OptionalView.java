@@ -62,13 +62,11 @@ public class OptionalView<A, B> implements Function<A, Optional<B>> {
     }
 
     public <C> CollectionView<A, C> andThen(final CollectionView<B, C> that) {
-        return CollectionView.of(
-                (A a) -> getOptional(a).map(that::getCollection).orElse(Collections.emptyList()));
+        return CollectionView.of((A a) -> getOptional(a).map(that::getCollection).orElse(Collections.emptyList()));
     }
 
     public <C> ListView<A, C> andThen(final ListView<B, C> that) {
-        return ListView.of(
-                (A a) -> getOptional(a).map(that::getList).orElse(Collections.emptyList()));
+        return ListView.of((A a) -> getOptional(a).map(that::getList).orElse(Collections.emptyList()));
     }
 
     public <C> SetView<A, C> andThen(final SetView<B, C> that) {

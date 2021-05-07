@@ -52,35 +52,23 @@ public class LensTest extends TestModel {
     public void andThen() {
         var composedPropertyLens =
                 rootObjNestedObjLens.andThen(nestedObjInnerObjLens).andThen(innerObjPropertyLens);
-        var composedPropertyStreamLens =
-                rootObjNestedObjLens
-                        .andThen(nestedObjInnerObjLens)
-                        .andThen(innerObjPropertyStreamLens);
 
         var o = new RootObj(null);
-
-        assertEquals(0, composedPropertyStreamLens.getStream(o).count());
 
         var updated = composedPropertyLens.set(o, PROP);
         assertNull(composedPropertyLens.get(updated));
 
         o = new RootObj(new NestedObj(null));
 
-        assertEquals(0, composedPropertyStreamLens.getStream(o).count());
-
         updated = composedPropertyLens.set(o, PROP);
         assertNull(composedPropertyLens.get(updated));
 
         o = new RootObj(new NestedObj(new InnerObj(null)));
 
-        assertEquals(0, composedPropertyStreamLens.getStream(o).count());
-
         updated = composedPropertyLens.set(o, PROP);
         assertEquals(PROP, composedPropertyLens.get(updated));
 
         o = new RootObj(new NestedObj(new InnerObj(PROP, Optional.empty(), Stream.of(PROP))));
-
-        assertEquals(1, composedPropertyStreamLens.getStream(o).count());
 
         updated = composedPropertyLens.set(o, "newProperty");
         assertEquals("newProperty", composedPropertyLens.get(updated));
@@ -93,10 +81,6 @@ public class LensTest extends TestModel {
     public void compose() {
         var composedPropertyLens =
                 innerObjPropertyLens.compose(nestedObjInnerObjLens).compose(rootObjNestedObjLens);
-        var composedPropertyStreamLens =
-                innerObjPropertyStreamLens
-                        .compose(nestedObjInnerObjLens)
-                        .compose(rootObjNestedObjLens);
 
         var o = new RootObj(null);
 
@@ -114,8 +98,6 @@ public class LensTest extends TestModel {
         assertEquals(PROP, composedPropertyLens.get(updated));
 
         o = new RootObj(new NestedObj(new InnerObj(PROP, Optional.empty(), Stream.of(PROP))));
-
-        assertEquals(1, composedPropertyStreamLens.getStream(o).count());
 
         updated = composedPropertyLens.set(o, "newProperty");
         assertEquals("newProperty", composedPropertyLens.get(updated));

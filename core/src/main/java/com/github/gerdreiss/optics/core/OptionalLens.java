@@ -18,7 +18,6 @@ package com.github.gerdreiss.optics.core;
 import java.util.Optional;
 import java.util.function.BiFunction;
 import java.util.function.Function;
-import java.util.stream.Stream;
 
 /**
  * "A lens is basically a getter/setter that can be used for deep updates of immutable data."
@@ -60,20 +59,13 @@ public class OptionalLens<A, B> extends OptionalView<A, B> {
     public <C> OptionalLens<A, C> andThen(Lens<B, C> that) {
         return OptionalLens.of(
                 (A a) -> getOptional(a).map(that::get),
-                (A a, Optional<C> maybeC) ->
-                        set(a, getOptional(a).flatMap(b -> maybeC.map(c -> that.set(b, c)))));
+                (A a, Optional<C> maybeC) -> set(a, getOptional(a).flatMap(b -> maybeC.map(c -> that.set(b, c)))));
     }
 
     public <C> OptionalLens<A, C> andThen(OptionalLens<B, C> that) {
         return OptionalLens.of(
                 (A a) -> getOptional(a).flatMap(that::getOptional),
                 (A a, Optional<C> maybeC) -> set(a, getOptional(a).map(b -> that.set(b, maybeC))));
-    }
-
-    public <C> StreamLens<A, C> andThen(StreamLens<B, C> that) {
-        return StreamLens.of(
-                (A a) -> getOptional(a).map(that::getStream).orElse(Stream.empty()),
-                (A a, Stream<C> cStream) -> set(a, getOptional(a).map(b -> that.set(b, cStream))));
     }
 
     public <C> OptionalLens<C, B> compose(Lens<C, A> that) {
@@ -84,7 +76,4 @@ public class OptionalLens<A, B> extends OptionalView<A, B> {
         return that.andThen(this);
     }
 
-    public <C> StreamLens<C, Optional<B>> compose(StreamLens<C, A> that) {
-        return that.andThen(this);
-    }
 }

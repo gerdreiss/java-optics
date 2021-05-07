@@ -15,12 +15,13 @@
  */
 package com.github.gerdreiss.optics.core;
 
+import static java.util.stream.Collectors.toSet;
+
 import java.util.Collections;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.Function;
 import java.util.function.Predicate;
-import java.util.stream.Collectors;
 
 public class SetView<A, B> implements Function<A, Set<B>> {
 
@@ -60,7 +61,7 @@ public class SetView<A, B> implements Function<A, Set<B>> {
     public Set<B> find(A a, Predicate<B> predicate) {
         return a == null
                 ? Collections.emptySet()
-                : fget.apply(a).stream().filter(predicate).collect(Collectors.toSet());
+                : fget.apply(a).stream().filter(predicate).collect(toSet());
     }
 
     public Optional<B> findFirst(A a, Predicate<B> predicate) {
@@ -68,20 +69,17 @@ public class SetView<A, B> implements Function<A, Set<B>> {
     }
 
     public <C> SetView<A, C> andThen(final View<B, C> that) {
-        return SetView.of((A a) -> getSet(a).stream().map(that::get).collect(Collectors.toSet()));
+        return SetView.of((A a) -> getSet(a).stream().map(that::get).collect(toSet()));
     }
 
     public <C> SetView<A, Optional<C>> andThen(final OptionalView<B, C> that) {
-        return SetView.of(
-                (A a) -> getSet(a).stream().map(that::getOptional).collect(Collectors.toSet()));
+        return SetView.of((A a) -> getSet(a).stream().map(that::getOptional).collect(toSet()));
     }
 
     public <C> SetView<A, C> andThen(final SetView<B, C> that) {
-        return SetView.of(
-                (A a) ->
-                        getSet(a).stream()
-                                .flatMap(b -> that.getSet(b).stream())
-                                .collect(Collectors.toSet()));
+        return SetView.of((A a) -> getSet(a).stream()
+                .flatMap(b -> that.getSet(b).stream())
+                .collect(toSet()));
     }
 
     public <C> SetView<C, B> compose(final View<C, A> that) {

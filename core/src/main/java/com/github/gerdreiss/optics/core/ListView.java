@@ -15,12 +15,13 @@
  */
 package com.github.gerdreiss.optics.core;
 
+import static java.util.stream.Collectors.toList;
+
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.Predicate;
-import java.util.stream.Collectors;
 
 public class ListView<A, B> implements Function<A, List<B>> {
 
@@ -60,7 +61,7 @@ public class ListView<A, B> implements Function<A, List<B>> {
     public List<B> find(A a, Predicate<B> predicate) {
         return a == null
                 ? Collections.emptyList()
-                : fget.apply(a).stream().filter(predicate).collect(Collectors.toList());
+                : fget.apply(a).stream().filter(predicate).collect(toList());
     }
 
     public Optional<B> findFirst(A a, Predicate<B> predicate) {
@@ -68,21 +69,17 @@ public class ListView<A, B> implements Function<A, List<B>> {
     }
 
     public <C> ListView<A, C> andThen(final View<B, C> that) {
-        return ListView.of(
-                (A a) -> getList(a).stream().map(that::get).collect(Collectors.toList()));
+        return ListView.of((A a) -> getList(a).stream().map(that::get).collect(toList()));
     }
 
     public <C> ListView<A, Optional<C>> andThen(final OptionalView<B, C> that) {
-        return ListView.of(
-                (A a) -> getList(a).stream().map(that::getOptional).collect(Collectors.toList()));
+        return ListView.of((A a) -> getList(a).stream().map(that::getOptional).collect(toList()));
     }
 
     public <C> ListView<A, C> andThen(final ListView<B, C> that) {
-        return ListView.of(
-                (A a) ->
-                        getList(a).stream()
-                                .flatMap(b -> that.getList(b).stream())
-                                .collect(Collectors.toList()));
+        return ListView.of((A a) -> getList(a).stream()
+                .flatMap(b -> that.getList(b).stream())
+                .collect(toList()));
     }
 
     public <C> ListView<C, B> compose(final View<C, A> that) {

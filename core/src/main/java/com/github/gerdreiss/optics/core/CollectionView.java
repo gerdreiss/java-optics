@@ -15,12 +15,13 @@
  */
 package com.github.gerdreiss.optics.core;
 
+import static java.util.stream.Collectors.toList;
+
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.Predicate;
-import java.util.stream.Collectors;
 
 public class CollectionView<A, B> implements Function<A, Collection<B>> {
 
@@ -60,7 +61,7 @@ public class CollectionView<A, B> implements Function<A, Collection<B>> {
     public Collection<B> find(A a, Predicate<B> predicate) {
         return a == null
                 ? Collections.emptyList()
-                : fget.apply(a).stream().filter(predicate).collect(Collectors.toList());
+                : fget.apply(a).stream().filter(predicate).collect(toList());
     }
 
     public Optional<B> findFirst(A a, Predicate<B> predicate) {
@@ -68,24 +69,19 @@ public class CollectionView<A, B> implements Function<A, Collection<B>> {
     }
 
     public <C> CollectionView<A, C> andThen(final View<B, C> that) {
-        return CollectionView.of(
-                (A a) -> getCollection(a).stream().map(that::get).collect(Collectors.toList()));
+        return CollectionView.of((A a) -> getCollection(a).stream().map(that::get).collect(toList()));
     }
 
     public <C> CollectionView<A, Optional<C>> andThen(final OptionalView<B, C> that) {
-        return CollectionView.of(
-                (A a) ->
-                        getCollection(a).stream()
-                                .map(that::getOptional)
-                                .collect(Collectors.toList()));
+        return CollectionView.of((A a) -> getCollection(a).stream()
+                .map(that::getOptional)
+                .collect(toList()));
     }
 
     public <C> CollectionView<A, C> andThen(final CollectionView<B, C> that) {
-        return CollectionView.of(
-                (A a) ->
-                        getCollection(a).stream()
-                                .flatMap(b -> that.getCollection(b).stream())
-                                .collect(Collectors.toList()));
+        return CollectionView.of((A a) -> getCollection(a).stream()
+                .flatMap(b -> that.getCollection(b).stream())
+                .collect(toList()));
     }
 
     public <C> CollectionView<C, B> compose(final View<C, A> that) {

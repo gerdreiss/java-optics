@@ -15,12 +15,13 @@
  */
 package com.github.gerdreiss.optics.core;
 
+import static java.util.stream.Collectors.toCollection;
+
 import java.util.Optional;
 import java.util.PriorityQueue;
 import java.util.Queue;
 import java.util.function.Function;
 import java.util.function.Predicate;
-import java.util.stream.Collectors;
 
 public class QueueView<A, B> implements Function<A, Queue<B>> {
 
@@ -62,7 +63,7 @@ public class QueueView<A, B> implements Function<A, Queue<B>> {
                 ? new PriorityQueue<>()
                 : fget.apply(a).stream()
                         .filter(predicate)
-                        .collect(Collectors.toCollection(PriorityQueue::new));
+                        .collect(toCollection(PriorityQueue::new));
     }
 
     public Optional<B> findFirst(A a, Predicate<B> predicate) {
@@ -70,27 +71,21 @@ public class QueueView<A, B> implements Function<A, Queue<B>> {
     }
 
     public <C> QueueView<A, C> andThen(final View<B, C> that) {
-        return QueueView.of(
-                (A a) ->
-                        getQueue(a).stream()
-                                .map(that::get)
-                                .collect(Collectors.toCollection(PriorityQueue::new)));
+        return QueueView.of((A a) -> getQueue(a).stream()
+                .map(that::get)
+                .collect(toCollection(PriorityQueue::new)));
     }
 
     public <C> QueueView<A, Optional<C>> andThen(final OptionalView<B, C> that) {
-        return QueueView.of(
-                (A a) ->
-                        getQueue(a).stream()
-                                .map(that::getOptional)
-                                .collect(Collectors.toCollection(PriorityQueue::new)));
+        return QueueView.of((A a) -> getQueue(a).stream()
+                .map(that::getOptional)
+                .collect(toCollection(PriorityQueue::new)));
     }
 
     public <C> QueueView<A, C> andThen(final QueueView<B, C> that) {
-        return QueueView.of(
-                (A a) ->
-                        getQueue(a).stream()
-                                .flatMap(b -> that.getQueue(b).stream())
-                                .collect(Collectors.toCollection(PriorityQueue::new)));
+        return QueueView.of((A a) -> getQueue(a).stream()
+                .flatMap(b -> that.getQueue(b).stream())
+                .collect(toCollection(PriorityQueue::new)));
     }
 
     public <C> QueueView<C, B> compose(final View<C, A> that) {
