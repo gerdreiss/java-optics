@@ -17,6 +17,7 @@ package com.github.gerdreiss.optics.core;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
@@ -68,6 +69,12 @@ public class Lens<A, B> extends View<A, B> {
                 (A a, List<C> cs) -> set(a, that.set(get(a), cs)));
     }
 
+    public <C> SetLens<A, C> andThen(SetLens<B, C> that) {
+        return SetLens.of(
+                (A a) -> that.getSet(get(a)),
+                (A a, Set<C> cs) -> set(a, that.set(get(a), cs)));
+    }
+
     public <C> Lens<C, B> compose(Lens<C, A> that) {
         return that.andThen(this);
     }
@@ -77,6 +84,10 @@ public class Lens<A, B> extends View<A, B> {
     }
 
     public <C> ListLens<C, B> compose(ListLens<C, A> that) {
+        return that.andThen(this);
+    }
+
+    public <C> SetLens<C, B> compose(SetLens<C, A> that) {
         return that.andThen(this);
     }
 
