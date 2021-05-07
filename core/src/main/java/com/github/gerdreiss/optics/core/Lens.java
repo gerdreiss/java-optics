@@ -17,6 +17,7 @@ package com.github.gerdreiss.optics.core;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Queue;
 import java.util.Set;
 import java.util.function.BiFunction;
 import java.util.function.Function;
@@ -73,6 +74,12 @@ public class Lens<A, B> extends View<A, B> {
         return SetLens.of(
                 (A a) -> that.getSet(get(a)),
                 (A a, Set<C> cs) -> set(a, that.set(get(a), cs)));
+    }
+
+    public <C> QueueLens<A, C> andThen(QueueLens<B, C> that) {
+        return QueueLens.of(
+                (A a) -> that.getQueue(get(a)),
+                (A a, Queue<C> cs) -> set(a, that.set(get(a), cs)));
     }
 
     public <C> Lens<C, B> compose(Lens<C, A> that) {
