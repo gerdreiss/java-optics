@@ -1,6 +1,6 @@
 package com.github.gerdreiss.optics.core;
 
-import static com.github.gerdreiss.optics.core.util.CollectionUtils.zip;
+import static com.github.gerdreiss.optics.core.util.IterableUtils.zipStream;
 import static java.util.stream.Collectors.toSet;
 
 import java.util.Set;
@@ -40,7 +40,7 @@ public class SetLens<A, B> extends SetView<A, B> {
     public <C> SetLens<A, C> andThen(Lens<B, C> that) {
         return SetLens.of(
                 (A a) -> getSet(a).stream().map(that::get).collect(toSet()),
-                (A a, Set<C> cs) -> set(a, zip(getSet(a), cs).stream()
+                (A a, Set<C> cs) -> set(a, zipStream(getSet(a), cs)
                         .map(entry -> that.set(entry.getKey(), entry.getValue()))
                         .collect(toSet()))
         );

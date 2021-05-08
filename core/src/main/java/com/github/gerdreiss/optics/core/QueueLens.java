@@ -1,6 +1,6 @@
 package com.github.gerdreiss.optics.core;
 
-import static com.github.gerdreiss.optics.core.util.CollectionUtils.zip;
+import static com.github.gerdreiss.optics.core.util.IterableUtils.zipStream;
 import static java.util.stream.Collectors.toCollection;
 
 import java.util.PriorityQueue;
@@ -37,7 +37,7 @@ public class QueueLens<A, B> extends QueueView<A, B> {
     public <C> QueueLens<A, C> andThen(Lens<B, C> that) {
         return QueueLens.of(
                 (A a) -> getQueue(a).stream().map(that::get).collect(toCollection(PriorityQueue::new)),
-                (A a, Queue<C> cs) -> set(a, zip(getQueue(a), cs).stream()
+                (A a, Queue<C> cs) -> set(a, zipStream(getQueue(a), cs)
                         .map(entry -> that.set(entry.getKey(), entry.getValue()))
                         .collect(toCollection(PriorityQueue::new)))
         );

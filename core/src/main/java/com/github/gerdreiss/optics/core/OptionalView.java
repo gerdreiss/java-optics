@@ -15,7 +15,9 @@
  */
 package com.github.gerdreiss.optics.core;
 
-import java.util.Collections;
+import static java.util.Collections.emptyList;
+import static java.util.Collections.emptySet;
+
 import java.util.Optional;
 import java.util.PriorityQueue;
 import java.util.function.Function;
@@ -62,15 +64,15 @@ public class OptionalView<A, B> implements Function<A, Optional<B>> {
     }
 
     public <C> CollectionView<A, C> andThen(final CollectionView<B, C> that) {
-        return CollectionView.of((A a) -> getOptional(a).map(that::getCollection).orElse(Collections.emptyList()));
+        return CollectionView.of((A a) -> getOptional(a).map(that::getCollection).orElse(emptyList()));
     }
 
     public <C> ListView<A, C> andThen(final ListView<B, C> that) {
-        return ListView.of((A a) -> getOptional(a).map(that::getList).orElse(Collections.emptyList()));
+        return ListView.of((A a) -> getOptional(a).map(that::getList).orElse(emptyList()));
     }
 
     public <C> SetView<A, C> andThen(final SetView<B, C> that) {
-        return SetView.of((A a) -> getOptional(a).map(that::getSet).orElse(Collections.emptySet()));
+        return SetView.of((A a) -> getOptional(a).map(that::getSet).orElse(emptySet()));
     }
 
     public <C> QueueView<A, C> andThen(final QueueView<B, C> that) {

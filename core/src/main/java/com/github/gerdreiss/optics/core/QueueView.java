@@ -58,7 +58,7 @@ public class QueueView<A, B> implements Function<A, Queue<B>> {
         return a == null ? Optional.empty() : fget.apply(a).stream().skip(n).findFirst();
     }
 
-    public Queue<B> find(A a, Predicate<B> predicate) {
+    public Queue<B> findAll(A a, Predicate<B> predicate) {
         return a == null
                 ? new PriorityQueue<>()
                 : fget.apply(a).stream()
@@ -67,7 +67,7 @@ public class QueueView<A, B> implements Function<A, Queue<B>> {
     }
 
     public Optional<B> findFirst(A a, Predicate<B> predicate) {
-        return find(a, predicate).stream().findFirst();
+        return findAll(a, predicate).stream().findFirst();
     }
 
     public <C> QueueView<A, C> andThen(final View<B, C> that) {

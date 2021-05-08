@@ -22,6 +22,7 @@ import java.util.Collections;
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.Predicate;
+import java.util.stream.Stream;
 
 public class CollectionView<A, B> implements Function<A, Collection<B>> {
 
@@ -44,28 +45,28 @@ public class CollectionView<A, B> implements Function<A, Collection<B>> {
         return a == null ? Collections.emptyList() : fget.apply(a);
     }
 
+    public Stream<B> getStream(A a) {
+        return a == null ? Stream.empty() : fget.apply(a).stream();
+    }
+
     public Optional<B> getFirst(A a) {
-        return a == null ? Optional.empty() : fget.apply(a).stream().findFirst();
+        return getStream(a).findFirst();
     }
 
     public Optional<B> getLast(A a) {
-        return a == null
-                ? Optional.empty()
-                : fget.apply(a).stream().reduce((first, second) -> second);
+        return getStream(a).reduce((first, second) -> second);
     }
 
     public Optional<B> getAt(A a, int n) {
-        return a == null ? Optional.empty() : fget.apply(a).stream().skip(n).findFirst();
+        return getStream(a).skip(n).findFirst();
     }
 
-    public Collection<B> find(A a, Predicate<B> predicate) {
-        return a == null
-                ? Collections.emptyList()
-                : fget.apply(a).stream().filter(predicate).collect(toList());
+    public Collection<B> findAll(A a, Predicate<B> predicate) {
+        return getStream(a).filter(predicate).collect(toList());
     }
 
     public Optional<B> findFirst(A a, Predicate<B> predicate) {
-        return find(a, predicate).stream().findFirst();
+        return findAll(a, predicate).stream().findFirst();
     }
 
     public <C> CollectionView<A, C> andThen(final View<B, C> that) {

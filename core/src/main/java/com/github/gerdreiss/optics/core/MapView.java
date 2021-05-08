@@ -17,7 +17,6 @@ package com.github.gerdreiss.optics.core;
 
 import static java.util.stream.Collectors.toMap;
 
-import java.util.AbstractMap.SimpleEntry;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
@@ -47,14 +46,14 @@ public class MapView<A, K, V> implements Function<A, Map<K, V>> {
 
     public <V1> MapView<A, K, V1> andThen(final View<V, V1> that) {
         return MapView.of((A a) -> getMap(a).entrySet().stream()
-                .map(e -> new SimpleEntry<>(e.getKey(), that.get(e.getValue())))
+                .map(e -> Map.entry(e.getKey(), that.get(e.getValue())))
                 .filter(e -> e.getValue() != null)
                 .collect(toMap(Entry::getKey, Entry::getValue)));
     }
 
     public <K1, V1> MapView<A, K, Collection<V1>> andThen(final MapView<V, K1, V1> that) {
         return MapView.of((A a) -> getMap(a).entrySet().stream()
-                .map(e -> new SimpleEntry<>(e.getKey(), that.getMap(e.getValue()).values()))
+                .map(e -> Map.entry(e.getKey(), that.getMap(e.getValue()).values()))
                 .collect(toMap(Entry::getKey, Entry::getValue)));
     }
 
