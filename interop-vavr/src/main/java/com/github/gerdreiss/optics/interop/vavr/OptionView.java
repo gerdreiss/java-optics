@@ -16,6 +16,7 @@
 package com.github.gerdreiss.optics.interop.vavr;
 
 import com.github.gerdreiss.optics.core.View;
+import io.vavr.collection.List;
 import io.vavr.control.Option;
 import java.util.function.Function;
 
@@ -46,6 +47,10 @@ public class OptionView<A, B> implements Function<A, Option<B>> {
 
     public <C> OptionView<A, C> andThen(final OptionView<B, C> that) {
         return OptionView.of((A a) -> getOption(a).flatMap(that::getOption));
+    }
+
+    public <C> ListView<A, C> andThen(final ListView<B, C> that) {
+        return ListView.of((A a) -> getOption(a).map(that::getList).getOrElse(List.empty()));
     }
 
     public <C> OptionView<C, B> compose(final View<C, A> that) {
