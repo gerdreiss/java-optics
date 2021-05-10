@@ -72,8 +72,8 @@ public class StreamView<A, B> implements Function<A, Stream<B>> {
         return StreamView.of((A a) -> getStream(a).map(that::get));
     }
 
-    public <C> StreamView<A, Optional<C>> andThen(final OptionalView<B, C> that) {
-        return StreamView.of((A a) -> getStream(a).map(that::getOptional));
+    public <C> StreamView<A, C> andThen(final OptionalView<B, C> that) {
+        return StreamView.of((A a) -> getStream(a).flatMap(b -> that.getOptional(b).stream()));
     }
 
     public <C> StreamView<A, C> andThen(final StreamView<B, C> that) {
