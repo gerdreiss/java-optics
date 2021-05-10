@@ -27,5 +27,9 @@ jobs:
       uses: actions/upload-artifact@v2
       with:
         name: code-coverage-report
-        path: target/site/jacoco/**
+        path: |
+          target/site/jacoco/**/*.html
+          target/site/jacoco/**/*.gif
+          target/site/jacoco/**/*.csv
+          target/site/jacoco/**/*.xml
         retention-days: 14
