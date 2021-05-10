@@ -88,7 +88,7 @@ public class OptionalView<A, B> implements Function<A, Optional<B>> {
         return that.andThen(this);
     }
 
-    public <C> StreamView<C, Optional<B>> compose(final StreamView<C, A> that) {
+    public <C> StreamView<C, B> compose(final StreamView<C, A> that) {
         return that.andThen(this);
     }
 

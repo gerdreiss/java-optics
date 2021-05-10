@@ -101,7 +101,7 @@ class StreamViewTest extends TestModel {
         var properties = composed.getStream(o);
         var maybeMaybeProperty = properties.findFirst();
         assertTrue(maybeMaybeProperty.isPresent());
-        assertEquals(MAYBE_PROP, maybeMaybeProperty.get());
+        assertEquals(MAYBE_PROP, maybeMaybeProperty);
     }
 
     @Test
@@ -143,7 +143,7 @@ class StreamViewTest extends TestModel {
         var properties = composed.getStream(o);
         var maybeMaybeProperty = properties.findFirst();
         assertTrue(maybeMaybeProperty.isPresent());
-        assertEquals(MAYBE_PROP, maybeMaybeProperty.get());
+        assertEquals(MAYBE_PROP, maybeMaybeProperty);
     }
 
     @Test
